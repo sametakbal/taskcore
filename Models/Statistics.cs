@@ -10,6 +10,6 @@ namespace task.samet.works.Models
     {
         [DataType(DataType.Date)]
         public DateTime? Day{get;set;}
-        public int FinishedTask { get; set; }
+        public int FinishedWorks { get; set; }
     }
 }
