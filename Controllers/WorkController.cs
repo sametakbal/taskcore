@@ -9,6 +9,7 @@ using Tasky.Models;
 
 namespace Tasky.Controllers
 {
+    [UserFilter]
     public class WorkController : Controller
     {
         private readonly DatabaseContext _context;

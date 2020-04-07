@@ -22,10 +22,16 @@ namespace Tasky.Controllers
 
         public IActionResult Index()
         {
+            if(HttpContext.Session.GetInt32("id").HasValue){
+                return Redirect("/Project/Index");
+            }
             return View();
         }
         public IActionResult SignUp()
         {
+            if(HttpContext.Session.GetInt32("id").HasValue){
+                return Redirect("/Project/Index");
+            }
             return View();
         }
 
@@ -36,15 +42,21 @@ namespace Tasky.Controllers
             if (user != null)
             {
 
-                HttpContext.Session.SetInt32("uid", user.Id);
+                HttpContext.Session.SetInt32("id", user.Id);
                 HttpContext.Session.SetString("name", user.Name);
-                HttpContext.Session.SetString("surname", user.Name);
+                HttpContext.Session.SetString("surname", user.Surname);
                 return Redirect("/Project/Index");
 
             }
 
             ViewBag.LoginError = true;
             return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult LogOut()
+        {
+            HttpContext.Session.Clear();
+            return Redirect("Index");
         }
         public async Task<IActionResult> Register(User user)
         {

@@ -9,6 +9,7 @@ using Tasky.Models;
 
 namespace Tasky.Controllers
 {
+    [UserFilter]
     public class ProjectController : Controller
     {
 
