@@ -11,11 +11,10 @@ namespace Tasky.Controllers
 {
     public class WorkController : Controller
     {
-        private readonly ILogger<WorkController> _logger;
-
-        public WorkController(ILogger<WorkController> logger)
+        private readonly DatabaseContext _context;
+        public WorkController(DatabaseContext context)
         {
-            _logger = logger;
+            _context = context;
         }
 
         public IActionResult Index()
@@ -23,10 +22,6 @@ namespace Tasky.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

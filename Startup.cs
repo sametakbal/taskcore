@@ -26,6 +26,7 @@ namespace Tasky
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            services.AddSession();
             services.AddDbContext<DatabaseContext>(options => 
             options.UseSqlServer(Configuration.GetConnectionString("Taskydb")));
             IMvcBuilder builder = services.AddRazorPages();
@@ -52,13 +53,15 @@ namespace Tasky
 
             app.UseRouting();
 
+            app.UseSession();
+
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Account}/{action=Index}/{id?}");
             });
         }
     }

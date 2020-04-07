@@ -11,9 +11,11 @@ namespace Tasky.Controllers
 {
     public class ProjectController : Controller
     {
-        public ProjectController()
+
+        private readonly DatabaseContext _context;
+        public ProjectController(DatabaseContext context)
         {
-            
+         _context = context;   
         }
 
         public IActionResult Index()
@@ -21,10 +23,7 @@ namespace Tasky.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
+ 
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
