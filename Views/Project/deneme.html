@@ -1,79 +1,4 @@
-﻿<section id="main-content">
-    <section class="wrapper">
-        <!--overview start-->
-        <div class="row">
-            <div class="col-lg-12">
-                <h3 class="page-header"><i class="fa fa-laptop"></i> Projeler</h3>
-                <ol class="breadcrumb">
-                    <li><i class="fa fa-home"></i><a href="index.html">Anasayfa</a></li>
-                    <li><i class="fa fa-laptop"></i>Projeler</li>
-                </ol>
-            </div>
-        </div>
-        <button class="btn btn-info" onclick="$('#AddProject').modal('show')" type="button"><span class="icon_plus_alt2"></span> Proje Ekle</button>
-        <div id='kanban'>
-        </div>
-
-    </section>
-</section>
-<div class="modal fade" id="AddProject" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form method="POST" action="/Project/Create" autocomplete="off">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title">Proje Ekle</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label class="control-label">Proje Başlığı:</label>
-                        <input type="text" class="form-control" name="Title" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label">Açıklama:</label>
-                        <input type="text" class="form-control" name="Description" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label">Hedef Zamanı:</label>
-                        <input type="date" name="GoalTime" class="form-control" id="GoalTime" required>
-
-                    </div>
-
-                </div>
-                <div class="modal-footer">
-                    <button data-dismiss="modal" class="btn btn-default" type="button">Kapat</button>
-                    <button class="btn btn-info" type="submit">Ekle</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-@section Scripts{
-<script type="text/javascript" src="~/js/jqxcore.js"></script>
-<script type="text/javascript" src="~/js/jqxsortable.js"></script>
-<script type="text/javascript" src="~/js/jqxkanban.js"></script>
-<script type="text/javascript" src="~/js/jqxdata.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script>
-    $('form').on('submit', (e) => {
-        e.preventDefault();
-        const body = new FormData(e.currentTarget);
-        fetch(e.currentTarget.action, {
-            method: 'post',
-            body
-        }).then(res => res.json()).then(res => {
-            Swal.fire(
-                'Oluşturdu!',
-                'Projeniz eklendi.',
-                'success'
-            )
-            $('#AddProject').modal('hide');
-        });
-    })
-</script>
-
-<script type="text/javascript">
     $(document).ready(function() {
         var fields = [{
             name: "id",
@@ -225,4 +150,3 @@
         });
     });
 </script>
-}
