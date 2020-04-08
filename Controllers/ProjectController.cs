@@ -20,7 +20,15 @@ namespace Tasky.Controllers
         {
             _context = context;
         }
-        public async Task<IActionResult> ReadToAll(){
+        public async Task<IActionResult> UpdateStatus(int itemid, int statusid)
+        {
+            var result = await _context.Project.FindAsync(itemid);
+            result.Status = (Status)statusid;
+            await _context.SaveChangesAsync();
+            return Json(true);
+        }
+        public async Task<IActionResult> ReadToAll()
+        {
             int? userId = HttpContext.Session.GetInt32("id");
             List<Project> result = await _context.Project.Where(w => _context.UserProjects
             .Where(e => e.UserId == userId && e.IsAccept)
