@@ -53,11 +53,27 @@ namespace Tasky.Controllers
             await _context.SaveChangesAsync();
             return Json(true);
         }
+        public async Task<IActionResult> Delete(int id){
+            var project = await _context.Project.FindAsync(id);
+            _context.Remove(project);
+            await _context.SaveChangesAsync();
+            return Json(true);
+        }
         public IActionResult Index()
         {
             return View();
         }
 
+        public async Task<IActionResult> Update(Project project){
+            _context.Update(project);
+            await _context.SaveChangesAsync();
+            return Json(true);
+        }
+        public async Task<IActionResult> ProjectDetails(int id)
+        {
+            var project = await _context.Project.FindAsync(id);
+            return Json(project);
+        }
 
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

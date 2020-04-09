@@ -1,4 +1,39 @@
 ﻿<link rel="stylesheet" href="~/css/jkanban.min.css">
+<style>
+    .m-b-30 {
+        margin-bottom: 60px;
+    }
+    
+    .success {
+        background: #00B961;
+        color: #fff;
+    }
+    
+    .notstart {
+        background: #8a8a8a;
+        color: #fff;
+    }
+    
+    .info {
+        background: #2A92BF;
+        color: #fff;
+    }
+    
+    .warning {
+        background: #F4CE46;
+        color: #fff;
+    }
+    
+    .error {
+        background: #FB7D44;
+        color: #fff;
+    }
+    
+    #demo3 {
+        overflow-x: auto;
+        padding: 20px 0;
+    }
+</style>
 <section id="main-content">
     <section class="wrapper">
         <!--overview start-->
@@ -12,10 +47,20 @@
             </div>
         </div>
         <div class="btn-group-toggle">
-            <button class="btn btn-info" onclick="$('#AddProject').modal('show')" type="button"><span class="icon_plus_alt2"></span> Proje Ekle</button>
         </div>
-        <div id="projectList" class="container-fluid">
-        </div>
+        <section class="panel">
+
+            <div class="panel-heading">
+                <button class="btn btn-info btn-block" onclick="$('#AddProject').modal('show')" type="button"><span class="icon_plus_alt2"></span> Proje Ekle</button>
+            </div>
+
+            <div class="panel-content" style="height: 766px;">
+                <center>
+                    <div id="projectList">
+                    </div>
+                </center>
+            </div>
+        </section>
 
     </section>
 </section>
@@ -78,6 +123,7 @@
     $(() => initData());
 
     function initData() {
+        $('#projectList').empty();
         fetch('/Project/ReadToAll')
             .then(res => res.json())
             .then(list => {
@@ -85,10 +131,11 @@
                     element: '#projectList',
                     addItemButton: true,
                     widthBoard: '350px',
+                    addItemButton: false,
                     click: function(el) {
                         console.log(el);
                         let itemid = $(el).attr('data-eid');
-                        window.location = ('/Task/Index?Id=' + itemid)
+                        window.location = ('/Work/Index?Id=' + itemid)
                     },
                     dragendEl: function(el) {
                         console.log(el);
@@ -99,7 +146,7 @@
                     boards: [{
                         'id': 'status_0',
                         'title': 'Yapılacaklar',
-                        'class': 'info',
+                        'class': 'notstart',
                         'dragTo': ['status_1'],
                         'item': list.filter(f => f.status == 0).map(item => ({
                             'id': item.id,
@@ -116,7 +163,7 @@
                     }, {
                         'id': 'status_2',
                         'title': 'Testte',
-                        'class': 'success',
+                        'class': 'info',
                         'item': list.filter(f => f.status == 2).map(item => ({
                             'id': item.id,
                             'title': item.title

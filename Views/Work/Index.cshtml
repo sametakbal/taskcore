@@ -1,1 +1,378 @@
-﻿
+﻿<link rel="stylesheet" href="~/css/jkanban.min.css">
+<style>
+    .m-b-30 {
+        margin-bottom: 60px;
+    }
+    
+    .success {
+        background: #00B961;
+        color: #fff;
+    }
+    
+    .notstart {
+        background: #8a8a8a;
+        color: #fff;
+    }
+    
+    .info {
+        background: #2A92BF;
+        color: #fff;
+    }
+    
+    .warning {
+        background: #F4CE46;
+        color: #fff;
+    }
+    
+    .error {
+        background: #FB7D44;
+        color: #fff;
+    }
+    
+    #demo3 {
+        overflow-x: auto;
+        padding: 20px 0;
+    }
+</style>
+<section id="main-content">
+    <section class="wrapper">
+        <!--overview start-->
+        <div class="row">
+            <div class="col-lg-12">
+
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-home"></i><a href="/Project/Index">Anasayfa</a></li>
+                    <li><i class="fa fa-laptop"></i>Görevler</li>
+                </ol>
+            </div>
+        </div>
+        <section class="panel">
+            <div class="panel-heading">
+                <center>
+                    <h3 class="page-header" id="ptitle"></h3>
+                </center>
+            </div>
+            <div class="panel-content">
+                <h4 id="pdescription"></h4>
+                <h6 id="pgoaltime"></h6>
+                <center>
+                    <div class="progress" id="progress">
+                    </div>
+                    <div class="btn-group btn-group-justified">
+                        <a class="btn btn-primary" href="#">Kişi Ekle</a>
+                        <a class="btn btn-success" onclick="$('#detailProject').modal('show')">Düzenle</a>
+
+                    </div>
+                </center>
+            </div>
+        </section>
+        <section class="panel">
+
+            <div class="panel-heading">
+                <button class="btn btn-info btn-block" onclick="addWork()" type="button"><span class="icon_plus_alt2"></span> Görev Ekle</button>
+            </div>
+
+            <div class="panel-content" style="height: 766px;">
+                <center>
+                    <div id="workList">
+                    </div>
+                </center>
+            </div>
+        </section>
+
+    </section>
+</section>
+
+<div class="modal fade" id="addwork" tabindex="-1" role="dialog" aria-labelledby="itemmodalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="itemmodalTitleTask">Görev</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="/Work/Save" id="workform" autocomplete="off">
+                <div class="modal-body">
+                    <input type="hidden" id="pid" name="ProjectId" />
+                    <input type="hidden" id="tid" name="Id" />
+                    <input type="hidden" id="sid" name="Status" />
+                    <div class="form-group">
+                        <label id="taskTitle">Görev Başlığı:</label>
+                        <input type="text" class="form-control" name="Title" id="Title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputPassword1">Açıklama:</label>
+                        <textarea type="text" class="form-control" name="Description" id="Description" required>
+                        </textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" onclick="deleteWork()" id="deleteBtn" class="btn btn-danger">Sil</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+                    <button type="submit" id="saveBtn" class="btn btn-primary">Oluştur</button>
+                    <button type="submit" id="updateBtn" class="btn btn-light">Güncelle</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="detailProject" tabindex="-1" role="dialog" aria-labelledby="itemmodalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="itemmodalTitleTask">Proje</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="/Project/Update" id="projectform" autocomplete="off">
+                <div class="modal-body">
+                    <input type="hidden" id="epid" name="Id" />
+                    <div class="form-group">
+                        <label id="taskTitle">Proje Başlığı:</label>
+                        <input type="text" class="form-control" name="Title" id="eptitle" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputPassword1">Açıklama:</label>
+                        <textarea type="text" class="form-control" name="Description" id="epdescription" required>
+                        </textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Hedef Zamanı:</label>
+                        <input type="date" name="GoalTime" class="form-control" id="epgoaltime" required>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" onclick="deleteProject()" id="deleteBtn" class="btn btn-danger">Sil</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+                    <button type="submit" id="updateBtn" class="btn btn-light">Güncelle</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+<script src="~/js/jkanban.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<script>
+    $('#workform').on('submit', (e) => {
+        e.preventDefault();
+        const body = new FormData(e.currentTarget);
+        fetch(e.currentTarget.action, {
+            method: 'post',
+            body
+        }).then(res => res.json()).then(res => {
+            initData();
+            Swal.fire(
+                'Tamamlandı!',
+                'İşlem Başarıyla gerçekleşti.',
+                'success'
+            )
+            $('#addwork').modal('hide')
+        });
+    })
+
+    function clearTask() {
+        $('#tid').val(0)
+        $('#Title').val(null)
+        $('#Description').val(null)
+    }
+
+    function deleteProject() {
+        Swal.fire({
+            title: 'Emin misiniz?',
+            text: "Bu işlemi geri alamazsınız!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Evet Sil!'
+        }).then((result) => {
+            if (result.value) {
+                fetch('/Project/Delete?id=' + project.id)
+                    .then(res => {
+                        Swal.fire(
+                            'Silindi!',
+                            'İşlem başarıyla gerçekleşti!',
+                            'success'
+                        )
+
+                        setTimeout(() => {
+                            window.location = ('/');
+                        }, 2000);
+                    })
+
+            }
+        })
+    }
+
+    function deleteWork() {
+        Swal.fire({
+            title: 'Emin misiniz?',
+            text: "Bu işlemi geri alamazsınız!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Evet Sil!'
+        }).then((result) => {
+            if (result.value) {
+                fetch('/Work/Delete?id=' + work.id)
+                    .then(res => {
+                        initData()
+                    })
+                Swal.fire(
+                    'Silindi!',
+                    'İşlem başarıyla gerçekleşti!',
+                    'success'
+                )
+            }
+        })
+    }
+</script>
+<script>
+    var kanban;
+    var project;
+    var work;
+    $(() => {
+        initData();
+        loadProject()
+    });
+
+    $('#projectform').on('submit', (e) => {
+        e.preventDefault();
+        const body = new FormData(e.currentTarget);
+        fetch(e.currentTarget.action, {
+            method: 'post',
+            body
+        }).then(res => res.json()).then(res => {
+            loadProject();
+            Swal.fire(
+                'Oluşturdu!',
+                'Proje güncellendi.',
+                'success'
+            )
+            $('#detailProject').modal('hide')
+
+        });
+    })
+
+    function addWork() {
+        $('#addwork').modal('show');
+        $('#saveBtn').show();
+        $('#updateBtn').hide();
+    }
+
+    function loadProject() {
+        fetch('/Project/ProjectDetails' + window.location.search)
+            .then(res => res.json())
+            .then(res => {
+                project = res;
+                $('#pdescription').text(res.description);
+                $('#ptitle').text(res.title);
+                $('#epgoaltime').text(res.goaltime);
+                $('#epid').val(res.id);
+                $('#epdescription').val(res.description);
+                $('#eptitle').val(res.title);
+                $('#epgoaltime').val(res.goaltime);
+                $('#pid').val(res.id);
+                progress();
+                /*$('#pid2').val(project.id)
+                
+                        progress();
+                        if (res.startTime != null) {
+                            $('#pstartTime').text(res.startTime)
+                        } else {
+                            $('#lblStartTime').hide()
+                        }*/
+            })
+    }
+
+    function progress() {
+        fetch('/Work/ProgressPercentage?id=' + project.id)
+            .then(res => res.json())
+            .then(res => {
+                let html = "";
+                html += `<div class="progress-bar" role="progressbar" style="width: ${res}%;" aria-valuenow="${res}" aria-valuemin="0"
+            aria-valuemax="100">${res}% Tamamlandı</div>`;
+                document.querySelector('#progress').innerHTML = html;
+            })
+    }
+
+    function initData() {
+        $('#workList').empty();
+        fetch('/Work/List' + window.location.search)
+            .then(res => res.json())
+            .then(list => {
+                kanban = new jKanban({
+                    element: '#workList',
+                    addItemButton: true,
+                    widthBoard: '350px',
+                    addItemButton: false,
+                    click: function(el) {
+                        let itemid = $(el).attr('data-eid');
+                        fetch('/Work/WorkDetails?Id=' + itemid)
+                            .then(res => res.json())
+                            .then(res => {
+                                $('#addwork').modal('show');
+                                work = res;
+                                $('#tid').val(res.id)
+                                $('#Title').val(res.title)
+                                $('#Description').val(res.description)
+                                $('#sid').val(res.status);
+                                $('#saveBtn').hide();
+                                $('#updateBtn').show();
+                            })
+                    },
+                    dragendEl: function(el) {
+                        console.log(el);
+                        let itemid = $(el).attr('data-eid');
+                        let statusid = $(el).parent().parent().attr('data-id').replace('status_', '');
+                        fetch('/Work/UpdateStatus?itemId=' + itemid + '&statusid=' + statusid).then(res => {
+                            progress()
+                        });
+                    },
+                    boards: [{
+                        'id': 'status_0',
+                        'title': 'Yapılacaklar',
+                        'class': 'notstart',
+                        'dragTo': ['status_1'],
+                        'item': list.filter(f => f.status == 0).map(item => ({
+                            'id': item.id,
+                            'title': item.title
+                        }))
+                    }, {
+                        'id': 'status_1',
+                        'title': 'Yapılıyor',
+                        'class': 'warning',
+                        'item': list.filter(f => f.status == 1).map(item => ({
+                            'id': item.id,
+                            'title': item.title
+                        }))
+                    }, {
+                        'id': 'status_2',
+                        'title': 'Testte',
+                        'class': 'info',
+                        'item': list.filter(f => f.status == 2).map(item => ({
+                            'id': item.id,
+                            'title': item.title
+                        }))
+                    }, {
+                        'id': 'status_3',
+                        'title': 'Bitti',
+                        'class': 'success',
+                        'item': list.filter(f => f.status == 3).map(item => ({
+                            'id': item.id,
+                            'title': item.title
+                        }))
+                    }]
+                });
+            });
+    }
+</script>
+}
