@@ -1,61 +1,91 @@
-﻿@{
-    Layout = null;
+@{
+    Layout =null;
 }
-
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
+
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Creative - Bootstrap 3 Responsive Admin Template">
-  <meta name="author" content="GeeksLabs">
-  <meta name="keyword" content="">
-  <link rel="shortcut icon" href="img/favicon.png">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
 
-  <title>Tasky | Project Management</title>
+  <title>SB Admin 2 - Register</title>
 
-  <link href="~/css/bootstrap.min.css" rel="stylesheet">
-  <link href="~/css/bootstrap-theme.css" rel="stylesheet">
-  <link href="~/css/elegant-icons-style.css" rel="stylesheet" />
-  <link href="~/css/font-awesome.css" rel="stylesheet" />
-  <link href="~/css/style.css" rel="stylesheet">
-  <link href="~/css/style-responsive.css" rel="stylesheet" />
+  <!-- Custom fonts for this template-->
+  <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+
+  <!-- Custom styles for this template-->
+  <link href="~/css/sb-admin-2.min.css" rel="stylesheet">
 
 </head>
 
-<body class="login-img3-body">
+<body class="bg-gradient-primary">
 
   <div class="container">
 
-    <form class="login-form" action="/Account/Register" autocomplete="off" method="POST">
-      <div class="login-wrap">
-        <p class="login-img"><i class="icon_id-2_alt"></i></p>
-        <div class="input-group">
-          <span class="input-group-addon"><i class="icon_profile"></i></span>
-          <input type="text" class="form-control" id="name" name="Name" placeholder="Ad"  required  autofocus>
+    <div class="card o-hidden border-0 shadow-lg my-5">
+      <div class="card-body p-0">
+        <!-- Nested Row within Card Body -->
+        <div class="row">
+          <div class="col-lg-5 d-none d-lg-block bg-register-image"></div>
+          <div class="col-lg-7">
+            <div class="p-5">
+              <div class="text-center">
+                <h1 class="h4 text-gray-900 mb-4">Tasky Dünyasına Hoşgeldiniz!</h1>
+              </div>
+              <form class="user" action="/Account/Register" autocomplete="off" method="POST">
+                <div class="form-group row">
+                  <div class="col-sm-6 mb-3 mb-sm-0">
+                    <input type="text" class="form-control form-control-user" id="FirstName" name="Name" placeholder="Ad">
+                  </div>
+                  <div class="col-sm-6">
+                    <input type="text" class="form-control form-control-user" id="LastName" name="Surname" placeholder="Soyad">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <input type="email" class="form-control form-control-user" id="InputEmail" name="Email" placeholder="Email Adresi">
+                </div>
+                <div class="form-group row">
+                  <div class="col-sm-6 mb-3 mb-sm-0">
+                    <input type="password" class="form-control form-control-user" id="InputPassword" name="Password" placeholder="Parola">
+                  </div>
+                  <div class="col-sm-6">
+                    <input type="password" class="form-control form-control-user" id="RepeatPassword" placeholder="Parola Tekrar">
+                  </div>
+                </div>
+                <a href="login.html" class="btn btn-primary btn-user btn-block">
+                  Kayıt Ol
+                </a>
+                <hr>
+              </form>
+              <hr>
+              <div class="text-center">
+                <a class="small" href="">Şifrenizi Mi Unuttunuz?</a>
+              </div>
+              <div class="text-center">
+                <a class="small" href="/Account/Index">Zaten bir hesabınız var mı? Giriş Yap!</a>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="input-group">
-          <span class="input-group-addon"><i class="icon_profile"></i></span>
-          <input type="text" class="form-control" placeholder="Soyad" id="surname" name="Surname" required autofocus>
-        </div>
-        <div class="input-group">
-          <span class="input-group-addon"><i class="icon_mail"></i></span>
-          <input type="text" class="form-control" placeholder="Email" id="email" name="Email" required autofocus>
-        </div>
-        <div class="input-group">
-          <span class="input-group-addon"><i class="icon_key_alt"></i></span>
-          <input type="password" class="form-control" id="password" name="Password" required placeholder="Parola">
-        </div>
-          <div class="input-group">
-          <span class="input-group-addon"><i class="icon_check"></i></span>
-          <input type="password" class="form-control" id="password_confirm" required placeholder="Parola Tekrar">
-        </div>
-        <button class="btn btn-info btn-lg btn-block" type="submit">Kayıt Ol</button>
       </div>
-    </form>
+    </div>
+
   </div>
 
+  <!-- Bootstrap core JavaScript-->
+  <script src="~/vendor/jquery/jquery.min.js"></script>
+  <script src="~/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Core plugin JavaScript-->
+  <script src="~/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+  <!-- Custom scripts for all pages-->
+  <script src="~/js/sb-admin-2.min.js"></script>
 
 </body>
 

@@ -25,8 +25,8 @@ namespace Tasky.Controllers
             int? userId = HttpContext.Session.GetInt32("id");
             List<Work> finishedTasks = await _context.Work.Where(w => w.FinishTime != null && w.ProjectId == id).ToListAsync();
             List<Work> tasks = await _context.Work.Where(w => w.ProjectId == id).ToListAsync();
-            int result =(int) (decimal)((decimal)finishedTasks.Count() / (decimal)tasks.Count()) * 100;
-            return Json(result);
+            var result = (decimal)((decimal)finishedTasks.Count() / (decimal)tasks.Count()) * 100;
+            return Json((int)result);
         }
         public async Task<IActionResult> Index(int id)
         {

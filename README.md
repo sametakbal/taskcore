@@ -1,2 +1,0 @@
-# Tasky
- Project Management System

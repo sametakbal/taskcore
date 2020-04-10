@@ -20,6 +20,13 @@ namespace Tasky.Controllers
         {
             _context = context;
         }
+
+        public IActionResult Index()
+        {
+
+            return View();
+        }
+
         public async Task<IActionResult> UpdateStatus(int itemid, int statusid)
         {
             var result = await _context.Project.FindAsync(itemid);
@@ -27,6 +34,7 @@ namespace Tasky.Controllers
             await _context.SaveChangesAsync();
             return Json(true);
         }
+
         public async Task<IActionResult> ReadToAll()
         {
             int? userId = HttpContext.Session.GetInt32("id");
@@ -53,18 +61,15 @@ namespace Tasky.Controllers
             await _context.SaveChangesAsync();
             return Json(true);
         }
-        public async Task<IActionResult> Delete(int id){
+        public async Task<IActionResult> Delete(int id)
+        {
             var project = await _context.Project.FindAsync(id);
             _context.Remove(project);
             await _context.SaveChangesAsync();
             return Json(true);
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Update(Project project)
         {
-            return View();
-        }
-
-        public async Task<IActionResult> Update(Project project){
             _context.Update(project);
             await _context.SaveChangesAsync();
             return Json(true);
