@@ -188,14 +188,24 @@
             if (result.value) {
                 fetch('/Project/Delete?id=' + project.id)
                     .then(res => {
-                        Swal.fire(
-                            'Silindi!',
-                            'İşlem başarıyla gerçekleşti!',
-                            'success'
-                        )
-                        setTimeout(() => {
-                            window.location = ('/');
-                        }, 2000);
+                        console.log(res.value);
+                        if (res.value) {
+                            Swal.fire(
+                                'Silindi!',
+                                'İşlem başarıyla gerçekleşti!',
+                                'success'
+                            )
+                            setTimeout(() => {
+                                window.location = ('/');
+                            }, 2000);
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: 'Proje Silinemedi!',
+                            })
+                        }
+
                     })
             }
         })

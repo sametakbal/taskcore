@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Tasky.Dao;
 using Tasky.Models;
 
 namespace Tasky.Controllers
@@ -15,10 +16,10 @@ namespace Tasky.Controllers
     public class ProjectController : Controller
     {
 
-        private readonly DatabaseContext _context;
-        public ProjectController(DatabaseContext context)
+        private DatabaseContext _context = null;
+        private ProjectDao _pdao = null;
+        public ProjectController()
         {
-            _context = context;
         }
 
         public IActionResult Index()
@@ -29,19 +30,16 @@ namespace Tasky.Controllers
 
         public async Task<IActionResult> UpdateStatus(int itemid, int statusid)
         {
-            var result = await _context.Project.FindAsync(itemid);
+            var result = await getContext().Project.FindAsync(itemid);
             result.Status = (Status)statusid;
-            await _context.SaveChangesAsync();
+            await getContext().SaveChangesAsync();
             return Json(true);
         }
 
         public async Task<IActionResult> ReadToAll()
         {
             int? userId = HttpContext.Session.GetInt32("id");
-            List<Project> result = await _context.Project.Where(w => _context.UserProjects
-            .Where(e => e.UserId == userId && e.IsAccept)
-            .Select(c => c.ProjectId)
-            .Contains(w.Id)).ToListAsync();
+            List<Project> result = await getPdao().Read((int)userId);
             return Json(result);
         }
         [HttpPost]
@@ -49,35 +47,53 @@ namespace Tasky.Controllers
         {
             int? userId = HttpContext.Session.GetInt32("id");
 
-            await _context.AddAsync(project);
-            await _context.SaveChangesAsync();
-            await _context.AddAsync(new UserProjects
+            await getContext().AddAsync(project);
+            await getContext().SaveChangesAsync();
+            await getContext().AddAsync(new UserProjects
             {
                 ProjectId = project.Id,
                 UserId = userId.Value,
                 IsAccept = true
             });
 
-            await _context.SaveChangesAsync();
+            await getContext().SaveChangesAsync();
             return Json(true);
         }
         public async Task<IActionResult> Delete(int id)
         {
-            var project = await _context.Project.FindAsync(id);
-            _context.Remove(project);
-            await _context.SaveChangesAsync();
-            return Json(true);
+            var project = await getContext().Project.FindAsync(id);
+            getContext().Remove(project);
+            await getContext().SaveChangesAsync();
+            return project != null ? Json(true) : Json(false);
         }
         public async Task<IActionResult> Update(Project project)
         {
-            _context.Update(project);
-            await _context.SaveChangesAsync();
+            getContext().Update(project);
+            await getContext().SaveChangesAsync();
             return Json(true);
         }
         public async Task<IActionResult> ProjectDetails(int id)
         {
-            var project = await _context.Project.FindAsync(id);
+            var project = await getContext().Project.FindAsync(id);
             return Json(project);
+        }
+
+        public DatabaseContext getContext()
+        {
+            if (_context == null)
+            {
+                _context = DatabaseContext.getContext();
+            }
+            return _context;
+        }
+
+        public ProjectDao getPdao()
+        {
+            if (_pdao == null)
+            {
+                _pdao = ProjectDao.GetProjectDao();
+            }
+            return _pdao;
         }
 
 

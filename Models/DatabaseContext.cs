@@ -3,9 +3,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Tasky.Models
 {
-    public class DatabaseContext : DbContext
+    public sealed class DatabaseContext : DbContext
     {
-        public DatabaseContext()
+        private static DatabaseContext _context = null;
+        private static readonly object padlock = new object();
+        private DatabaseContext()
         {
 
         }
@@ -21,6 +23,28 @@ namespace Tasky.Models
 
         public DbSet<UserProjects> UserProjects { get; set; }
         public DbSet<UserWorks> UserWorks { get; set; }
+
+        public static DatabaseContext getContext()
+        {
+                if (_context == null)
+                {
+                    lock (padlock)
+                    {
+                        if (_context == null)
+                        {
+                            _context = new DatabaseContext();
+                        }
+                    }
+                }
+                return _context;
+        }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseSqlServer("Server=DESKTOP-9EK8BDA\\SQLEXPRESS;Database=taskydb;Trusted_Connection=True;");
+            }
+        }
 
     }
 }

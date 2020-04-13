@@ -27,8 +27,8 @@ namespace Tasky
         {
             services.AddControllersWithViews();
             services.AddSession();
-            services.AddDbContext<DatabaseContext>(options => 
-            options.UseSqlServer(Configuration.GetConnectionString("Taskydb")));
+            services.AddDbContext<DatabaseContext>();
+            
             IMvcBuilder builder = services.AddRazorPages();
 #if DEBUG
             builder.AddRazorRuntimeCompilation();
