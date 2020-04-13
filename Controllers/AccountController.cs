@@ -22,14 +22,16 @@ namespace Tasky.Controllers
 
         public IActionResult Index()
         {
-            if(HttpContext.Session.GetInt32("id").HasValue){
+            if (HttpContext.Session.GetInt32("id").HasValue)
+            {
                 return Redirect("/Project/Index");
             }
             return View();
         }
         public IActionResult SignUp()
         {
-            if(HttpContext.Session.GetInt32("id").HasValue){
+            if (HttpContext.Session.GetInt32("id").HasValue)
+            {
                 return Redirect("/Project/Index");
             }
             return View();
@@ -38,13 +40,15 @@ namespace Tasky.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(User model)
         {
-            var user = await _context.User.FirstOrDefaultAsync(w => w.Email == model.Email && w.Password == model.Password);
+            var user = await _context.User.FirstOrDefaultAsync(w => (w.Email == model.Email || w.Username == model.Email)
+            && w.Password == model.Password);
             if (user != null)
             {
 
                 HttpContext.Session.SetInt32("id", user.Id);
                 HttpContext.Session.SetString("name", user.Name);
                 HttpContext.Session.SetString("surname", user.Surname);
+                HttpContext.Session.SetString("username", user.Username);
                 return Redirect("/Project/Index");
 
             }
@@ -68,7 +72,7 @@ namespace Tasky.Controllers
 
             return RedirectToAction(nameof(Index));
         }
-    
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
