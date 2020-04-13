@@ -8,7 +8,9 @@ namespace Tasky.Models
 {
     public class BaseEntity
     {
+        [StringLength(150)]
         public string Title { get; set; }
+        [StringLength(1000)]
         public string Description { get; set; }
         public DateTime? StartTime { get; set; }
         [DataType(DataType.Date)]

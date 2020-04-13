@@ -23,6 +23,7 @@ namespace Tasky.Models
 
         public DbSet<UserProjects> UserProjects { get; set; }
         public DbSet<UserWorks> UserWorks { get; set; }
+        public DbSet<Mail> Mail { get; set; }
 
         public static DatabaseContext getContext()
         {
