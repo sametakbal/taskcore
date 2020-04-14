@@ -6,9 +6,15 @@ using Tasky.Models;
 
 namespace Tasky.Dao
 {
-    public interface IDao
+    public interface IDao<T>
     {
-       public Task<Boolean> Create(Object obj);
+       public Task<Boolean> Insert(Object obj);
+
+       public Task<List<T>> Read(int id);
+       public Task<Boolean> Modify(Object obj);
+       public Task<Boolean> Erase(int Id);
+
+      
 
     }
 }

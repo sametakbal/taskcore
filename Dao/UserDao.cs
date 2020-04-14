@@ -8,7 +8,7 @@ using Tasky.Models;
 
 namespace Tasky.Dao
 {
-    public class UserDao : Dao, IDao
+    public class UserDao : Dao
     {
         public async Task<bool> Create(object obj)
         {
