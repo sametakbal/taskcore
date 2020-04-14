@@ -8,12 +8,12 @@ using Tasky.Models;
 
 namespace Tasky.Dao
 {
-    public class ProjectDao : Dao,IDao
+    public class ProjectDao : Dao, IDao
     {
         private static ProjectDao projectDao = null;
 
-        private ProjectDao(){}
-        public override async Task<List<Project>> Read(int id)
+        private ProjectDao() { }
+        public async Task<List<Project>> Read(int id)
         {
             List<Project> result = await getContext().Project.Where(w => getContext().UserProjects
             .Where(e => e.UserId == id && e.IsAccept)
@@ -22,8 +22,10 @@ namespace Tasky.Dao
             return result;
         }
 
-        public static ProjectDao GetProjectDao(){
-            if(projectDao == null){
+        public static ProjectDao GetProjectDao()
+        {
+            if (projectDao == null)
+            {
                 projectDao = new ProjectDao();
             }
             return projectDao;
@@ -32,6 +34,14 @@ namespace Tasky.Dao
         public bool metod()
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<bool> Create(object obj)
+        {
+            Project project = (Project)obj;
+            await getContext().AddAsync(project);
+            await getContext().SaveChangesAsync();
+            return true;
         }
     }
 }

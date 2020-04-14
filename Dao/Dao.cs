@@ -10,7 +10,7 @@ namespace Tasky.Dao
     {
         public DatabaseContext _context = null;
 
-        public abstract Task<List<Project>> Read(int id); 
+  //      public abstract Task<List<Project>> Read(int id); 
 
         //public abstract 
         public DatabaseContext getContext()

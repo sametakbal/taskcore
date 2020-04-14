@@ -8,8 +8,7 @@ namespace Tasky.Dao
 {
     public interface IDao
     {
-       bool metod();
-
+       public Task<Boolean> Create(Object obj);
 
     }
 }

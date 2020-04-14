@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Tasky.Models;
 
 namespace Tasky.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20200413213559_mateadd")]
+    partial class mateadd
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -126,31 +128,6 @@ namespace Tasky.Migrations
                     b.ToTable("User");
                 });
 
-            modelBuilder.Entity("Tasky.Models.UserMates", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<bool>("IsAccept")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("MateId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("MateId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserMates");
-                });
-
             modelBuilder.Entity("Tasky.Models.UserProjects", b =>
                 {
                     b.Property<int>("Id")
@@ -243,21 +220,6 @@ namespace Tasky.Migrations
                     b.HasOne("Tasky.Models.User", "Sender")
                         .WithMany()
                         .HasForeignKey("SenderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Tasky.Models.UserMates", b =>
-                {
-                    b.HasOne("Tasky.Models.User", "Mate")
-                        .WithMany()
-                        .HasForeignKey("MateId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Tasky.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

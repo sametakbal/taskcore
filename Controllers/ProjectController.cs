@@ -47,8 +47,7 @@ namespace Tasky.Controllers
         {
             int? userId = HttpContext.Session.GetInt32("id");
 
-            await getContext().AddAsync(project);
-            await getContext().SaveChangesAsync();
+            await getPdao().Create(project);
             await getContext().AddAsync(new UserProjects
             {
                 ProjectId = project.Id,
@@ -66,6 +65,7 @@ namespace Tasky.Controllers
             await getContext().SaveChangesAsync();
             return project != null ? Json(true) : Json(false);
         }
+        [HttpPost]
         public async Task<IActionResult> Update(Project project)
         {
             getContext().Update(project);

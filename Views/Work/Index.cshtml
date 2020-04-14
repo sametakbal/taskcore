@@ -118,11 +118,11 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="/Project/Update" id="projectform" autocomplete="off">
+            <form action="/Project/Update" id="projectform" method="POST" autocomplete="off">
                 <div class="modal-body">
                     <input type="hidden" id="epid" name="Id" />
                     <div class="form-group">
-                        <label id="taskTitle">Proje Başlığı:</label>
+                        <label id="projectTitle">Proje Başlığı:</label>
                         <input type="text" class="form-control" name="Title" id="eptitle" required>
                     </div>
                     <div class="form-group">
@@ -150,6 +150,24 @@
 @section Scripts{
 <script src="~/js/jkanban.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<script>
+    $('#projetform').on('submit', (e) => {
+        e.preventDefault();
+        const body = new FormData(e.currentTarget);
+        fetch(e.currentTarget.action, {
+            method: 'post',
+            body
+        }).then(res => res.json()).then(res => {
+            loadProject();
+            Swal.fire(
+                'Tamamlandı!',
+                'İşlem Başarıyla gerçekleşti.',
+                'success'
+            )
+            $('#detailProject').modal('hide')
+        });
+    })
+</script>
 <script>
     $('#workform').on('submit', (e) => {
         e.preventDefault();
@@ -185,27 +203,18 @@
             cancelButtonColor: '#3085d6',
             confirmButtonText: 'Evet Sil!'
         }).then((result) => {
-            if (result.value) {
+            if (result) {
                 fetch('/Project/Delete?id=' + project.id)
                     .then(res => {
-                        console.log(res.value);
-                        if (res.value) {
-                            Swal.fire(
-                                'Silindi!',
-                                'İşlem başarıyla gerçekleşti!',
-                                'success'
-                            )
-                            setTimeout(() => {
-                                window.location = ('/');
-                            }, 2000);
-                        } else {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Oops...',
-                                text: 'Proje Silinemedi!',
-                            })
-                        }
 
+                        Swal.fire(
+                            'Silindi!',
+                            'İşlem başarıyla gerçekleşti!',
+                            'success'
+                        )
+                        setTimeout(() => {
+                            window.location = ('/');
+                        }, 2000);
                     })
             }
         })
@@ -243,22 +252,6 @@
         initData();
         loadProject()
     });
-    $('#projectform').on('submit', (e) => {
-        e.preventDefault();
-        const body = new FormData(e.currentTarget);
-        fetch(e.currentTarget.action, {
-            method: 'post',
-            body
-        }).then(res => res.json()).then(res => {
-            loadProject();
-            Swal.fire(
-                'Oluşturdu!',
-                'Proje güncellendi.',
-                'success'
-            )
-            $('#detailProject').modal('hide')
-        });
-    })
 
     function addWork() {
         $('#addwork').modal('show');

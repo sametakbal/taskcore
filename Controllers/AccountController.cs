@@ -37,6 +37,38 @@ namespace Tasky.Controllers
             return View();
         }
 
+        public IActionResult Profile()
+        {
+            if (!HttpContext.Session.GetInt32("id").HasValue)
+            {
+                return Redirect("Index");
+            }
+            return View();
+        }
+
+        public IActionResult ForgotPassword()
+        {
+            if (HttpContext.Session.GetInt32("id").HasValue)
+            {
+                return Redirect("Index");
+            }
+            return View();
+        }
+
+        public IActionResult None()
+        {
+            return View();
+        }
+
+        public IActionResult Settings()
+        {
+            if (!HttpContext.Session.GetInt32("id").HasValue)
+            {
+                return Redirect("NotFound");
+            }
+            return View();
+        }
+
         [HttpPost]
         public async Task<IActionResult> Login(User model)
         {

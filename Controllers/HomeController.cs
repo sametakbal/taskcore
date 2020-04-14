@@ -12,6 +12,7 @@ namespace Tasky.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private DatabaseContext _context;
 
         public HomeController(ILogger<HomeController> logger)
         {
@@ -23,9 +24,20 @@ namespace Tasky.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
+        public IActionResult Mates(string term)
         {
-            return View();
+            List<User> list = getContext().User.Where(w => w.Username == term).ToList();
+
+            return View(list);
+        }
+
+        public DatabaseContext getContext()
+        {
+            if (_context == null)
+            {
+                _context = DatabaseContext.getContext();
+            }
+            return _context;
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
