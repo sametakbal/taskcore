@@ -60,6 +60,11 @@ namespace Tasky.Controllers
             return View();
         }
 
+        public IActionResult Statistics()
+        {
+            return View();
+        }
+
         public IActionResult Settings()
         {
             if (!HttpContext.Session.GetInt32("id").HasValue)
