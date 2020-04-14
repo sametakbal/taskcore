@@ -11,6 +11,7 @@ namespace Tasky.Dao
     public class ProjectDao : Dao, IDao<Project>
     {
         private static ProjectDao instance = null;
+        private WorkDao wdao=null;
 
         private ProjectDao() { }
         public async Task<List<Project>> Read(int id)
@@ -74,5 +75,23 @@ namespace Tasky.Dao
             return true;
         }
 
+        public async Task<List<ProjectsProgress>> ProgressList(int userId){
+            List<ProjectsProgress> result = new List<ProjectsProgress>();
+            foreach(var item in await Read(userId)){
+                ProjectsProgress tmp = new ProjectsProgress{
+                    Project = item,
+                    Progress = await GetWorkDao().ProgressPercentage(item.Id)
+                };
+                result.Add(tmp);
+            }
+            return result;
+        }
+
+        public WorkDao GetWorkDao(){
+            if(wdao == null){
+                wdao = WorkDao.getInstance();
+            }
+            return wdao;
+        }
     }
 }

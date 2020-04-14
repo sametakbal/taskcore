@@ -15,7 +15,7 @@ namespace Tasky.Controllers
     [UserFilter]
     public class WorkController : Controller
     {
-        private WorkDao instance=null;
+        private WorkDao instance = null;
         public async Task<IActionResult> ProgressPercentage(int id)
         {
             return Json(await getInstance().ProgressPercentage(id));
@@ -43,7 +43,7 @@ namespace Tasky.Controllers
             }
             else
             {
-               await getInstance().Modify(work);
+                await getInstance().Modify(work);
             }
             return Json(true);
         }
@@ -51,12 +51,12 @@ namespace Tasky.Controllers
         {
             int? userId = HttpContext.Session.GetInt32("id");
             //   var result = await getContext().Task.Where(w => w.ProjectId == Id && w.UserId == userId).ToListAsync();
-            List<Work> result = await getInstance().Read((int)userId,Id);
+            List<Work> result = await getInstance().Read((int)userId, Id);
             return Json(result);
         }
         public async Task<IActionResult> UpdateStatus(int itemid, int statusid)
         {
-            await getInstance().ModifyStatus(itemid,statusid);
+            await getInstance().ModifyStatus(itemid, statusid);
             return Json(true);
         }
         public async Task<IActionResult> WorkDetails(int id)
@@ -64,11 +64,20 @@ namespace Tasky.Controllers
             return Json(await getInstance().Detail(id));
         }
 
-        public WorkDao getInstance(){
-            if(instance ==null){
+        public WorkDao getInstance()
+        {
+            if (instance == null)
+            {
                 instance = WorkDao.getInstance();
             }
             return instance;
+        }
+
+        public IActionResult WeekReport()
+        {
+            var result = getInstance().FinishedWorks();
+
+            return Json(result);
         }
 
 

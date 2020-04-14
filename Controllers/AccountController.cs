@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Tasky.Dao;
 using Tasky.Models;
 
 namespace Tasky.Controllers
@@ -60,9 +61,11 @@ namespace Tasky.Controllers
             return View();
         }
 
-        public IActionResult Statistics()
+        public async Task<IActionResult> Statistics()
         {
-            return View();
+            int id = (int)HttpContext.Session.GetInt32("id");
+            List<ProjectsProgress> res = await ProjectDao.getInstance().ProgressList(id);
+            return View(res);
         }
 
         public IActionResult Settings()
