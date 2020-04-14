@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Tasky.Dao;
 using Tasky.Models;
 
 namespace Tasky.Controllers
@@ -14,26 +15,14 @@ namespace Tasky.Controllers
     [UserFilter]
     public class WorkController : Controller
     {
-        private readonly DatabaseContext _context;
-        public WorkController(DatabaseContext context)
-        {
-            _context = context;
-        }
-
+        private WorkDao instance=null;
         public async Task<IActionResult> ProgressPercentage(int id)
         {
-            int? userId = HttpContext.Session.GetInt32("id");
-            List<Work> finishedTasks = await _context.Work.Where(w => w.FinishTime != null && w.ProjectId == id).ToListAsync();
-            List<Work> tasks = await _context.Work.Where(w => w.ProjectId == id).ToListAsync();
-            var result = (decimal)((decimal)finishedTasks.Count() / (decimal)tasks.Count()) * 100;
-            return Json((int)result);
+            return Json(await getInstance().ProgressPercentage(id));
         }
         public async Task<IActionResult> Index(int id)
         {
-
-            int? userId = HttpContext.Session.GetInt32("id");
-            var result = await _context.Project.FirstOrDefaultAsync(w => w.Id == id);
-            if (result == null)
+            if (!await getInstance().ProjectCheck(id))
             {
                 return Redirect("/Project/Index");
             }
@@ -42,62 +31,44 @@ namespace Tasky.Controllers
 
         public async Task<IActionResult> Delete(int id)
         {
-            var task = await _context.Work.FindAsync(id);
-            _context.Remove(task);
-            await _context.SaveChangesAsync();
-            return Json(true);
+            return Json(await getInstance().Erase(id));
         }
         public async Task<IActionResult> Save(Work work)
         {
             int? userId = HttpContext.Session.GetInt32("id");
             if (work.Id == 0)
             {
-                _context.Add(work);
-                await _context.SaveChangesAsync();
-                await _context.UserWorks.AddAsync(new UserWorks { WorkId = work.Id, UserId = userId.Value });
+                await getInstance().Insert(work);
+                await getInstance().InsertUserWork(new UserWorks { WorkId = work.Id, UserId = userId.Value });
             }
             else
             {
-                _context.Update(work);
+               await getInstance().Modify(work);
             }
-            await _context.SaveChangesAsync();
             return Json(true);
         }
         public async Task<IActionResult> List(int Id)
         {
             int? userId = HttpContext.Session.GetInt32("id");
-            //   var result = await _context.Task.Where(w => w.ProjectId == Id && w.UserId == userId).ToListAsync();
-            List<Work> result = await _context.Work.Where(w => _context.UserWorks
-            .Where(e => e.UserId == userId)
-                .Select(c => c.WorkId)
-                .Contains(w.Id) && w.ProjectId == Id).ToListAsync();
+            //   var result = await getContext().Task.Where(w => w.ProjectId == Id && w.UserId == userId).ToListAsync();
+            List<Work> result = await getInstance().Read((int)userId,Id);
             return Json(result);
         }
         public async Task<IActionResult> UpdateStatus(int itemid, int statusid)
         {
-            var result = await _context.Work.FindAsync(itemid);
-            result.Status = (Status)statusid;
-            switch (result.Status)
-            {
-                case Status.NotStarted:
-                    result.StartTime = DateTime.Now;
-                    result.FinishTime = null;
-                    break;
-                case Status.Done:
-                    result.FinishTime = DateTime.Now;
-                    break;
-                default:
-                    result.FinishTime = null;
-                    result.StartTime = null;
-                    break;
-            }
-            await _context.SaveChangesAsync();
+            await getInstance().ModifyStatus(itemid,statusid);
             return Json(true);
         }
         public async Task<IActionResult> WorkDetails(int id)
         {
-            var work = await _context.Work.FindAsync(id);
-            return Json(work);
+            return Json(await getInstance().Detail(id));
+        }
+
+        public WorkDao getInstance(){
+            if(instance ==null){
+                instance = WorkDao.getInstance();
+            }
+            return instance;
         }
 
 

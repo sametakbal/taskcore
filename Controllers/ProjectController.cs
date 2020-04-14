@@ -16,10 +16,7 @@ namespace Tasky.Controllers
     public class ProjectController : Controller
     {
         private ProjectDao instance = null;
-        private User user;
-        public ProjectController()
-        {
-        }
+        
 
         public IActionResult Index()
         {

@@ -12,9 +12,7 @@ namespace Tasky.Dao
 
        public Task<List<T>> Read(int id);
        public Task<Boolean> Modify(Object obj);
-       public Task<Boolean> Erase(int Id);
-
-      
+       public Task<Boolean> Erase(int id);
 
     }
 }

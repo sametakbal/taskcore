@@ -176,7 +176,6 @@
             method: 'post',
             body
         }).then(res => res.json()).then(res => {
-            initData();
             progress();
             Swal.fire(
                 'Tamamlandı!',
@@ -184,10 +183,12 @@
                 'success'
             )
             $('#addwork').modal('hide')
+            initData();
+            clearWork();
         });
     })
 
-    function clearTask() {
+    function clearWork() {
         $('#tid').val(0)
         $('#Title').val(null)
         $('#Description').val(null)
@@ -233,7 +234,9 @@
             if (result.value) {
                 fetch('/Work/Delete?id=' + work.id)
                     .then(res => {
-                        initData()
+                        initData();
+                        progress();
+                        clearWork();
                     })
                 Swal.fire(
                     'Silindi!',
@@ -241,6 +244,7 @@
                     'success'
                 )
             }
+            $('#addwork').modal('hide');
         })
     }
 </script>
