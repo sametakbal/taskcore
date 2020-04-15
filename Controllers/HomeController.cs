@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Tasky.Models;
@@ -26,7 +27,9 @@ namespace Tasky.Controllers
 
         public IActionResult Mates(string term)
         {
-            List<User> list = getContext().User.Where(w => w.Username == term).ToList();
+            int? userId = HttpContext.Session.GetInt32("id");
+            List<User> list = getContext().User.Where(w => 
+            (w.Username.Contains(term) || w.Name.Contains(term) || w.Surname.Contains(term))&& w.Id != userId).ToList();
 
             return View(list);
         }

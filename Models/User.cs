@@ -23,5 +23,8 @@ namespace Tasky.Models
         [StringLength(20)]
         public string Password { get; set; }
 
+        [StringLength(1000)]
+        public string About{get;set;}="Bir bilgi girilmedi";
+
     }
 }

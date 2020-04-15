@@ -18,6 +18,8 @@ namespace Tasky.Models
         public int MateId { get; set; }
 
         public bool IsAccept { get; set; } = false;
+        public bool Request { get; set; } = false;
+
     }
 
 }

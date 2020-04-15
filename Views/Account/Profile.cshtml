@@ -1,0 +1,39 @@
+<div class="container">
+    <div class="row">
+        <div class="text-center">
+            <form class="user" action="/Account/Register" autocomplete="off" method="POST">
+                <div class="form-group text-center">
+                    <img src="/img/pp.png" class="rounded" width="200" alt="...">
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-6 mb-3 mb-sm-0">
+                        <input type="text" class="form-control form-control-user" id="FirstName" name="Name" placeholder="Ad">
+                    </div>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control form-control-user" id="LastName" name="Surname" placeholder="Soyad">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control form-control-user" id="InputUsername" name="Username" placeholder="Kullanıcı Adı">
+                </div>
+                <div class="form-group">
+                    <input type="email" class="form-control form-control-user" id="InputEmail" name="Email" placeholder="Email Adresi">
+                </div>
+                <div class="form-group">
+                    <textarea type="text" class="form-control form-control-user" id="InputAbout" name="About" placeholder="Hakkında"></textarea>
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-6 mb-3 mb-sm-0">
+                        <input type="password" class="form-control form-control-user" id="InputPassword" name="Password" placeholder="Parola">
+                    </div>
+                    <div class="col-sm-6">
+                        <input type="password" class="form-control form-control-user" id="RepeatPassword" placeholder="Parola Tekrar">
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary btn-user btn-block">
+                      Bilgileri güncelle
+                    </button>
+            </form>
+        </div>
+    </div>
+</div>
