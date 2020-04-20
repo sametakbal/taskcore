@@ -9,9 +9,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Tasky.Models;
+using taskcore.Dao;
 
-namespace Tasky
+namespace taskcore
 {
     public class Startup
     {

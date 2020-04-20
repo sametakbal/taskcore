@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Tasky.Migrations
+namespace taskcore.Migrations
 {
     public partial class mateadd2 : Migration
     {

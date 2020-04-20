@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Routing;
 
-namespace Tasky{
+namespace taskcore{
     public class UserFilterAttribute: ActionFilterAttribute {
         public override void OnActionExecuting (ActionExecutingContext filterContext) {
             int? id = filterContext.HttpContext.Session.GetInt32("id");

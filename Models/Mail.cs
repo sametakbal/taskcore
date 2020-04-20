@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Tasky.Models
+namespace taskcore.Models
 {
     public class Mail
     {

@@ -1,6 +1,6 @@
 using System;
 
-namespace Tasky.Models
+namespace taskcore.Models
 {
     public class ErrorViewModel
     {

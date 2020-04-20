@@ -1,10 +1,11 @@
-@model IEnumerable<Tasky.Models.User>
+@model IEnumerable<taskcore.Models.User>
 @{
     int i =0,j=1;
 }
     @foreach (var item in Model) {
         @if(i%3==0){@Html.Raw("<div class=\"card-group\">")}
         <div class="card mb-3 mr-3" style="max-width: 540px;">
+                        <a onclick="userDetail(@item.Id)"  >
             <div class="row no-gutters">
                 <div class="col-md-4">
                     <img src="/img/pp.png" class="card-img" alt="...">
@@ -18,9 +19,56 @@
                     </div>
                 </div>
             </div>
+            </a>
         </div>
+
         @if(j%3==0 || j == Model.Count()){@Html.Raw("</div>")}
         i++;
         j++;
     }
     <h6 class="text-gray-800 text-center">@Model.Count() adet sonuç bulundu</h6>
+<div class="modal" id="userModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h5 class="modal-title text-center" id="modalTitle">Samet Akbal</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+           <div class="card mb-3 mr-3" style="max-width: 540px;">
+            <div class="row no-gutters">
+                <div class="col-md-4">
+                    <img src="/img/pp.png" class="card-img" alt="...">
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <h6 color="gray">&#64;akbal</h6>
+                        <p class="card-text">Sonunu düşünen kahraman olamaz!</p>
+                        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+          </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">İstek gönder!</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+@section Scripts{
+  <script>
+    function userDetail(id){
+      fetch('/Home/UserProfile?Id='+id)
+      .then(res.json())
+      .then(res=>{
+          console.log(res.name)
+      });
+      }
+    }
+  </script>
+}

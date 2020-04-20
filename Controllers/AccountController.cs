@@ -7,10 +7,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Tasky.Dao;
-using Tasky.Models;
+using taskcore.Dao;
+using taskcore.Manager;
+using taskcore.Models;
 
-namespace Tasky.Controllers
+namespace taskcore.Controllers
 {
     public class AccountController : Controller
     {
@@ -56,6 +57,12 @@ namespace Tasky.Controllers
             return View();
         }
 
+         public IActionResult ResetPassword()
+        {
+
+            return View();
+        }
+
         public IActionResult None()
         {
             return View();
@@ -89,6 +96,7 @@ namespace Tasky.Controllers
                 HttpContext.Session.SetString("name", user.Name);
                 HttpContext.Session.SetString("surname", user.Surname);
                 HttpContext.Session.SetString("username", user.Username);
+                UserManager.SetCurrentUser(user);
                 return Redirect("/Project/Index");
 
             }
@@ -111,6 +119,31 @@ namespace Tasky.Controllers
             }
 
             return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> UpdatePassword(string Code,string Password)
+        {
+            if(MailManager.getCode() == Code){
+                User tmp = UserManager.GetCurrentUser();
+                tmp.Password = Password;
+                _context.Update(tmp);
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+
+        public async Task<IActionResult> SendACode(string email){
+            User tmp = await _context.User.FirstOrDefaultAsync(w => w.Email == email);
+
+            if(tmp != null){
+                UserManager.SetCurrentUser(tmp);
+                await MailManager.ResetPasswordCode();
+            }else{
+                return Json(false);
+            }
+            return Redirect("ResetPassword");
         }
 
 

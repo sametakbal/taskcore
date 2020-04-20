@@ -1,7 +1,8 @@
 using System;
 using Microsoft.EntityFrameworkCore;
+using taskcore.Models;
 
-namespace Tasky.Models
+namespace taskcore.Dao
 {
     public sealed class DatabaseContext : DbContext
     {
@@ -44,7 +45,7 @@ namespace Tasky.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Server=DESKTOP-9EK8BDA\\SQLEXPRESS;Database=taskydb;Trusted_Connection=True;");
+                optionsBuilder.UseSqlServer("Server=localhost;Database=taskcoredb;User Id=SA;Password=Blcbm8745Database;");
             }
         }
 

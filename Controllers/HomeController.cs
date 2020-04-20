@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Tasky.Models;
+using taskcore.Dao;
+using taskcore.Models;
 
-namespace Tasky.Controllers
+namespace taskcore.Controllers
 {
     public class HomeController : Controller
     {
@@ -25,11 +26,23 @@ namespace Tasky.Controllers
             return View();
         }
 
+        public async Task<IActionResult> UserProfile(int Id){
+            User user = await getContext().User.FindAsync(Id);
+            int? userId = HttpContext.Session.GetInt32("id");
+            UserMates userMates =getContext().UserMates.FirstOrDefault(w=> (w.Id == userId || w.Id == user.Id) && (w.Id == user.Id || w.Id == userId));
+            if(userMates == null){
+                userMates = new UserMates();
+            }
+            ViewBag.IsFriend = userMates.IsAccept;
+            ViewBag.IsRequest = userMates.Request;
+            return Json(user);
+        }
+
         public IActionResult Mates(string term)
         {
             int? userId = HttpContext.Session.GetInt32("id");
             List<User> list = getContext().User.Where(w => 
-            (w.Username.Contains(term) || w.Name.Contains(term) || w.Surname.Contains(term))&& w.Id != userId).ToList();
+            (w.Username.Contains(term) || w.Name.Contains(term) || w.Surname.Contains(term))&& w.Id != userId).OrderBy(w => w.Name).ToList();
 
             return View(list);
         }

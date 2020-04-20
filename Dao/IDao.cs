@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Tasky.Models;
+using taskcore.Models;
 
-namespace Tasky.Dao
+namespace taskcore.Dao
 {
     public interface IDao<T>
     {

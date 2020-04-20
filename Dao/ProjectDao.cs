@@ -4,9 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Tasky.Models;
+using taskcore.Models;
 
-namespace Tasky.Dao
+namespace taskcore.Dao
 {
     public class ProjectDao : Dao, IDao<Project>
     {

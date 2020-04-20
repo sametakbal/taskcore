@@ -5,9 +5,10 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Tasky.Models;
+using taskcore.Models;
+using taskcore.Dao;
 
-namespace Tasky.Migrations
+namespace taskcore.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
     [Migration("20200413213559_mateadd")]
@@ -21,7 +22,7 @@ namespace Tasky.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("Tasky.Models.Mail", b =>
+            modelBuilder.Entity("taskcore.Models.Mail", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -57,7 +58,7 @@ namespace Tasky.Migrations
                     b.ToTable("Mail");
                 });
 
-            modelBuilder.Entity("Tasky.Models.Project", b =>
+            modelBuilder.Entity("taskcore.Models.Project", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -92,7 +93,7 @@ namespace Tasky.Migrations
                     b.ToTable("Project");
                 });
 
-            modelBuilder.Entity("Tasky.Models.User", b =>
+            modelBuilder.Entity("taskcore.Models.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -128,7 +129,7 @@ namespace Tasky.Migrations
                     b.ToTable("User");
                 });
 
-            modelBuilder.Entity("Tasky.Models.UserProjects", b =>
+            modelBuilder.Entity("taskcore.Models.UserProjects", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -153,7 +154,7 @@ namespace Tasky.Migrations
                     b.ToTable("UserProjects");
                 });
 
-            modelBuilder.Entity("Tasky.Models.UserWorks", b =>
+            modelBuilder.Entity("taskcore.Models.UserWorks", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -175,7 +176,7 @@ namespace Tasky.Migrations
                     b.ToTable("UserWorks");
                 });
 
-            modelBuilder.Entity("Tasky.Models.Work", b =>
+            modelBuilder.Entity("taskcore.Models.Work", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -209,54 +210,54 @@ namespace Tasky.Migrations
                     b.ToTable("Work");
                 });
 
-            modelBuilder.Entity("Tasky.Models.Mail", b =>
+            modelBuilder.Entity("taskcore.Models.Mail", b =>
                 {
-                    b.HasOne("Tasky.Models.User", "Receiver")
+                    b.HasOne("taskcore.Models.User", "Receiver")
                         .WithMany()
                         .HasForeignKey("ReceiverId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Tasky.Models.User", "Sender")
+                    b.HasOne("taskcore.Models.User", "Sender")
                         .WithMany()
                         .HasForeignKey("SenderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Tasky.Models.UserProjects", b =>
+            modelBuilder.Entity("taskcore.Models.UserProjects", b =>
                 {
-                    b.HasOne("Tasky.Models.Project", "Project")
+                    b.HasOne("taskcore.Models.Project", "Project")
                         .WithMany()
                         .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Tasky.Models.User", "User")
+                    b.HasOne("taskcore.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Tasky.Models.UserWorks", b =>
+            modelBuilder.Entity("taskcore.Models.UserWorks", b =>
                 {
-                    b.HasOne("Tasky.Models.User", "User")
+                    b.HasOne("taskcore.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Tasky.Models.Work", "Work")
+                    b.HasOne("taskcore.Models.Work", "Work")
                         .WithMany()
                         .HasForeignKey("WorkId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Tasky.Models.Work", b =>
+            modelBuilder.Entity("taskcore.Models.Work", b =>
                 {
-                    b.HasOne("Tasky.Models.Project", "Project")
+                    b.HasOne("taskcore.Models.Project", "Project")
                         .WithMany()
                         .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
