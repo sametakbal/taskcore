@@ -1,96 +1,118 @@
 @model IEnumerable<taskcore.Models.User>
-@{
-    int i =0,j=1;
-}
-    @foreach (var item in Model) {
-        @if(i%3==0){@Html.Raw("<div class=\"card-group\">")}
-        <div class="card mb-3 mr-3" style="max-width: 540px;">
-                        <a onclick="userDetail(@item.Id)"  >
-            <div class="row no-gutters">
-                <div class="col-md-4">
-                    <img src="/img/pp.png" class="card-img" alt="...">
-                </div>
-                <div class="col-md-8">
-                    <div class="card-body">
-                        <h5 class="m-0 font-weight-bold text-primary">@item.Name @item.Surname</h5>
-                        <h6 color="gray">&#64;@item.Username</h6>
-                        <p class="card-text">@item.About</p>
-                        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-                    </div>
-                </div>
-            </div>
-            </a>
-        </div>
-
-        @if(j%3==0 || j == Model.Count()){@Html.Raw("</div>")}
-        i++;
-        j++;
-    }
-    <h6 class="text-gray-800 text-center">@Model.Count() adet sonuç bulundu</h6>
-<div class="modal" id="userModal" tabindex="-1" role="dialog">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header text-center">
-        <h5 class="modal-title text-center" id="modalTitle"></h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-           <div class="card mb-3 mr-3" style="max-width: 540px;">
-            <div class="row no-gutters">
-                <div class="col-md-4">
-                    <img src="/img/pp.png" class="card-img" alt="...">
-                </div>
-                <div class="col-md-8">
-                    <div class="card-body">
-                        <h6 color="gray" id="modalUsername">&#64;</h6>
-                        <p class="card-text" id="modalAbout"></p>
-                    </div>
-                </div>
-            </div>
-        </div>
+  @{
+  int i =0,j=1;
+  }
+  @foreach (var item in Model) {
+  @if(i%3==0){@Html.Raw("<div class=\"card-group\">")}
+    <div class="card mb-3 mr-3" style="max-width: 540px;">
+      <a onclick="userDetail(@item.Id)">
+        <div class="row no-gutters">
+          <div class="col-md-4">
+            <img src="/img/pp.png" class="card-img" alt="...">
           </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" id="requestBtn" class="btn btn-primary">İstek gönder!</button>
-        <button type="button" id="sentBtn" class="btn btn-info">İstek gönderildi!</button>
-        <button type="button" id="frienBtn" class="btn btn-success">Arkadaşsınız</button>
+          <div class="col-md-8">
+            <div class="card-body">
+              <h5 class="m-0 font-weight-bold text-primary">@item.Name @item.Surname</h5>
+              <h6 color="gray">&#64;@item.Username</h6>
+              <p class="card-text">@item.About</p>
+              <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+            </div>
+          </div>
+        </div>
+      </a>
+    </div>
+
+    @if(j%3==0 || j == Model.Count()){@Html.Raw("</div>")}
+  i++;
+  j++;
+  }
+  <h6 class="text-gray-800 text-center">@Model.Count() adet sonuç bulundu</h6>
+  <div class="modal" id="userModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header text-center">
+          <h5 class="modal-title text-center" id="modalTitle"></h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="card mb-3 mr-3" style="max-width: 540px;">
+            <div class="row no-gutters">
+              <div class="col-md-4">
+                <img src="/img/pp.png" class="card-img" alt="...">
+              </div>
+              <div class="col-md-8">
+                <div class="card-body">
+                  <h6 color="gray" id="modalUsername">&#64;</h6>
+                  <p class="card-text" id="modalAbout"></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" id="requestBtn" onclick="sendRequest()" class="btn btn-primary">İstek gönder!</button>
+          <button type="button" id="sentBtn" onclick="deleteRequest()" class="btn btn-info">İstek gönderildi!</button>
+          <button type="button" id="friendBtn" class="btn btn-success">Arkadaşsınız</button>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-@section Scripts{
+  @section Scripts{
   <script>
     var user;
-    function userDetail(Id){
-      fetch('/Home/UserProfile?Id='+Id)
-      .then(res => res.json())
-      .then(res=>{
+    function userDetail(Id) {
+      fetch('/Home/UserProfile?Id=' + Id)
+        .then(res => res.json())
+        .then(res => {
           user = res;
-          $('#modalTitle').text(res.name+' '+res.surname)
+          $('#modalTitle').text(res.name + ' ' + res.surname)
           $('#modalUsername').text(res.username)
           $('#modalAbout').text(res.about)
           $('#userModal').modal('show')
-      });
-fetch('/Home/GetFriendState?Id='+Id)
-.then(res => res.json())
-.then(res => {
-  console.log(typeof res)
-  if(res === 0){
-  $('#requestBtn').show()
-  $('#sentBtn').hide()
-  }else if(res === 1){
-  $('#requestBtn').hide()
-$('#sentBtn').show()
-  }else{
-    $('#requestBtn').hide()
-  $('#sentBtn').hide()
-  }
-})
+        });
+      fetch('/Home/GetFriendState?Id=' + Id)
+        .then(res => res.json())
+        .then(res => {
+          console.log(res)
+          if (res == 0) {
+            $('#requestBtn').show()
+            $('#sentBtn').hide()
+            $('#friendBtn').hide()
 
-      }
-    
+          } else if (res == 1) {
+            $('#requestBtn').hide()
+            $('#sentBtn').show()
+            $('#friendBtn').hide()
+
+          } else {
+            $('#requestBtn').hide()
+            $('#sentBtn').hide()
+            $('#friendBtn').show()
+
+          }
+        })
+    }
+
+    function sendRequest(){
+          fetch('/Home/FriendRequest?Id='+user.id)
+        .then(res => res.json())
+        .then(res => {
+         userDetail(user.id);         
+        })
+    }
+
+     function deleteRequest(){
+          fetch('/Home/DeleteRequest?MateId='+user.id)
+        .then(res => res.json())
+        .then(res => {
+         userDetail(user.id);         
+        })
+    }
+
+
   </script>
-}
+  }
