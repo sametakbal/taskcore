@@ -26,23 +26,45 @@ namespace taskcore.Controllers
             return View();
         }
 
-        public async Task<IActionResult> UserProfile(int Id){
+        public async Task<IActionResult> UserProfile(int Id)
+        {
             User user = await getContext().User.FindAsync(Id);
+            return Json(user);
+        }
+
+        public IActionResult GetFriendState(int Id)
+        {
             int? userId = HttpContext.Session.GetInt32("id");
-            UserMates userMates =getContext().UserMates.FirstOrDefault(w=> (w.Id == userId || w.Id == user.Id) && (w.Id == user.Id || w.Id == userId));
-            if(userMates == null){
+            UserMates userMates = getContext().UserMates.FirstOrDefault(w => (w.UserId == userId && w.MateId == Id) || (w.MateId == Id && w.UserId == userId));
+            if (userMates == null)
+            {
                 userMates = new UserMates();
             }
-            ViewBag.IsFriend = userMates.IsAccept;
-            ViewBag.IsRequest = userMates.Request;
-            return Json(user);
+            return Json((int)userMates.State);
+        }
+
+        public async Task<IActionResult> FriendRequest(int Id)
+        {
+            User user = await getContext().User.FindAsync(Id);
+            int? userId = HttpContext.Session.GetInt32("id");
+
+            await getContext().UserMates.AddAsync(new UserMates
+            {
+                UserId = (int)userId,
+                MateId = user.Id,
+                State = (State)1
+            });
+
+            await getContext().SaveChangesAsync();
+
+            return Json(true);
         }
 
         public IActionResult Mates(string term)
         {
             int? userId = HttpContext.Session.GetInt32("id");
-            List<User> list = getContext().User.Where(w => 
-            (w.Username.Contains(term) || w.Name.Contains(term) || w.Surname.Contains(term))&& w.Id != userId).OrderBy(w => w.Name).ToList();
+            List<User> list = getContext().User.Where(w =>
+            (w.Username.Contains(term) || w.Name.Contains(term) || w.Surname.Contains(term)) && w.Id != userId).OrderBy(w => w.Name).ToList();
 
             return View(list);
         }

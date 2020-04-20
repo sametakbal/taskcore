@@ -31,7 +31,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header text-center">
-        <h5 class="modal-title text-center" id="modalTitle">Samet Akbal</h5>
+        <h5 class="modal-title text-center" id="modalTitle"></h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -44,9 +44,8 @@
                 </div>
                 <div class="col-md-8">
                     <div class="card-body">
-                        <h6 color="gray">&#64;akbal</h6>
-                        <p class="card-text">Sonunu düşünen kahraman olamaz!</p>
-                        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                        <h6 color="gray" id="modalUsername">&#64;</h6>
+                        <p class="card-text" id="modalAbout"></p>
                     </div>
                 </div>
             </div>
@@ -54,7 +53,9 @@
           </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">İstek gönder!</button>
+        <button type="button" id="requestBtn" class="btn btn-primary">İstek gönder!</button>
+        <button type="button" id="sentBtn" class="btn btn-info">İstek gönderildi!</button>
+        <button type="button" id="frienBtn" class="btn btn-success">Arkadaşsınız</button>
       </div>
     </div>
   </div>
@@ -62,13 +63,34 @@
 
 @section Scripts{
   <script>
-    function userDetail(id){
-      fetch('/Home/UserProfile?Id='+id)
-      .then(res.json())
+    var user;
+    function userDetail(Id){
+      fetch('/Home/UserProfile?Id='+Id)
+      .then(res => res.json())
       .then(res=>{
-          console.log(res.name)
+          user = res;
+          $('#modalTitle').text(res.name+' '+res.surname)
+          $('#modalUsername').text(res.username)
+          $('#modalAbout').text(res.about)
+          $('#userModal').modal('show')
       });
+fetch('/Home/GetFriendState?Id='+Id)
+.then(res => res.json())
+.then(res => {
+  console.log(typeof res)
+  if(res === 0){
+  $('#requestBtn').show()
+  $('#sentBtn').hide()
+  }else if(res === 1){
+  $('#requestBtn').hide()
+$('#sentBtn').show()
+  }else{
+    $('#requestBtn').hide()
+  $('#sentBtn').hide()
+  }
+})
+
       }
-    }
+    
   </script>
 }

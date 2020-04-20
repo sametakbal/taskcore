@@ -17,9 +17,13 @@ namespace taskcore.Models
 
         public int MateId { get; set; }
 
-        public bool IsAccept { get; set; } = false;
-        public bool Request { get; set; } = false;
-
+        public State State { get; set; }
     }
+       public enum State
+    {
+        NoConnection,
+        RequestSent,
+        Friend
+    };
 
 }
