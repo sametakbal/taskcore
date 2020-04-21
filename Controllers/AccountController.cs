@@ -17,6 +17,7 @@ namespace taskcore.Controllers
     {
 
         private readonly DatabaseContext _context;
+        private UserDao userDao = null;
         public AccountController(DatabaseContext context)
         {
             _context = context;
@@ -87,18 +88,15 @@ namespace taskcore.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(User model)
         {
-            var user = await _context.User.FirstOrDefaultAsync(w => (w.Email == model.Email || w.Username == model.Email)
-            && w.Password == model.Password);
+            User user = await GetUserDao().Find(model);
             if (user != null)
             {
-
                 HttpContext.Session.SetInt32("id", user.Id);
                 HttpContext.Session.SetString("name", user.Name);
                 HttpContext.Session.SetString("surname", user.Surname);
                 HttpContext.Session.SetString("username", user.Username);
                 UserManager.SetCurrentUser(user);
                 return Redirect("/Project/Index");
-
             }
 
             ViewBag.LoginError = true;
@@ -112,12 +110,7 @@ namespace taskcore.Controllers
         }
         public async Task<IActionResult> Register(User user)
         {
-            if (user != null)
-            {
-                await _context.AddAsync(user);
-                await _context.SaveChangesAsync();
-            }
-
+                await GetUserDao().Create(user);
             return RedirectToAction(nameof(Index));
         }
 
@@ -144,6 +137,10 @@ namespace taskcore.Controllers
                 return Json(false);
             }
             return Redirect("ResetPassword");
+        }
+
+        public UserDao GetUserDao(){
+            return userDao == null ? userDao = UserDao.getInstance() : userDao;
         }
 
 
