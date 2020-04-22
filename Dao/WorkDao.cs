@@ -42,8 +42,10 @@ namespace taskcore.Dao
 
         public async Task<bool> Modify(object obj)
         {
-            Work work = (Work)obj;
-            getContext().Update(work);
+            Work tmp = (Work)obj;
+    //        getContext().Update(work);
+            var work = getContext().Work.First(w => w.Id == tmp.Id);
+            getContext().Entry(work).CurrentValues.SetValues(tmp);
             await getContext().SaveChangesAsync();
             return true;
         }

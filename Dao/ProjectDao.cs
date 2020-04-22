@@ -22,6 +22,7 @@ namespace taskcore.Dao
             .Contains(w.Id)).ToListAsync();
             return result;
         }
+
         public async Task<bool> Insert(object obj)
         {
             Project project = (Project)obj; 
