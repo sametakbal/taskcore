@@ -22,7 +22,7 @@ namespace taskcore.Dao
 
         public async Task<User> Find(User model)
         {
-            User user = await _context.User.FirstOrDefaultAsync(w => (w.Email == model.Email || w.Username == model.Email)
+            User user = await getContext().User.FirstOrDefaultAsync(w => (w.Email == model.Email || w.Username == model.Email)
                         && w.Password == model.Password);
             return user;
         }

@@ -24,7 +24,7 @@ namespace taskcore.Dao
         }
         public async Task<bool> Insert(object obj)
         {
-            Project project = (Project)obj;
+            Project project = (Project)obj; 
             await getContext().AddAsync(project);
             await getContext().SaveChangesAsync();
             
@@ -33,8 +33,10 @@ namespace taskcore.Dao
 
         public async Task<bool> Modify(object obj)
         {
-            Project project = (Project)obj;
-            getContext().Update(project);
+            Project tmp = (Project)obj;
+            var project = getContext().Project.First(w => w.Id == tmp.Id);
+            getContext().Entry(project).CurrentValues.SetValues(tmp);
+            //getContext().Project.Update(project);
             await getContext().SaveChangesAsync();
             return true;
         }
@@ -60,6 +62,20 @@ namespace taskcore.Dao
         {
             Project result = await getContext().Project.FindAsync(itemid);
             result.Status = (Status)statusid;
+            switch (result.Status)
+            {
+                case Status.NotStarted:
+                    result.StartTime = DateTime.Now;
+                    result.FinishTime = null;
+                    break;
+                case Status.Done:
+                    result.FinishTime = DateTime.Now;
+                    break;
+                default:
+                    result.FinishTime = null;
+                    result.StartTime = null;
+                    break;
+            }
             await getContext().SaveChangesAsync();
             return true;
         }

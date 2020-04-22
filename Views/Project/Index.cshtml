@@ -51,7 +51,7 @@
 <div class="modal fade" id="AddProject" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form method="POST" action="/Project/Create" autocomplete="off">
+            <form method="POST" action="/Project/Create" id="ProjectForm" autocomplete="off">
                 <div class="modal-header">
                     Proje Ekle
                 </div>
@@ -84,7 +84,7 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script src="~/js/jkanban.min.js"></script>
 <script>
-    $('form').on('submit', (e) => {
+    $('#ProjectForm').on('submit', (e) => {
         e.preventDefault();
         const body = new FormData(e.currentTarget);
         fetch(e.currentTarget.action, {

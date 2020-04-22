@@ -45,9 +45,11 @@ namespace taskcore.Dao
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Server=localhost;Database=taskcoredb;User Id=SA;Password=Blcbm8745Database;");
+                optionsBuilder.UseSqlServer("Server=localhost;Database=taskcoredb;User Id=SA;Password=Blcbm8745Database;")
+                .EnableSensitiveDataLogging();
             }
         }
+        
 
     }
 }

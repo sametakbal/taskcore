@@ -1,5 +1,5 @@
 @{
-    Layout =null;
+Layout =null;
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -12,24 +12,21 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>SB Admin 2 - Register</title>
+  <title>TaskCore Kayıt Ol</title>
 
-  <!-- Custom fonts for this template-->
   <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+    rel="stylesheet">
 
-  <!-- Custom styles for this template-->
   <link href="~/css/sb-admin-2.min.css" rel="stylesheet">
 
 </head>
 
 <body class="bg-gradient-primary">
-
   <div class="container">
-
     <div class="card o-hidden border-0 shadow-lg my-5">
       <div class="card-body p-0">
-        <!-- Nested Row within Card Body -->
         <div class="row">
           <div class="col-lg-5 d-none d-lg-block bg-register-image"></div>
           <div class="col-lg-7">
@@ -37,27 +34,37 @@
               <div class="text-center">
                 <h1 class="h4 text-gray-900 mb-4">Tasky Dünyasına Hoşgeldiniz!</h1>
               </div>
-              <form class="user" action="/Account/Register" autocomplete="off" method="POST">
+              <form class="user" action="/Account/Register" autocomplete="off" method="POST"
+                onsubmit="return checkPassword()">
                 <div class="form-group row">
                   <div class="col-sm-6 mb-3 mb-sm-0">
-                    <input type="text" class="form-control form-control-user" id="FirstName" name="Name" placeholder="Ad">
+                    <input type="text" class="form-control form-control-user" id="FirstName" name="Name"
+                      placeholder="Ad">
                   </div>
                   <div class="col-sm-6">
-                    <input type="text" class="form-control form-control-user" id="LastName" name="Surname" placeholder="Soyad">
+                    <input type="text" class="form-control form-control-user" id="LastName" name="Surname"
+                      placeholder="Soyad">
                   </div>
                 </div>
                 <div class="form-group">
-                  <input type="text" class="form-control form-control-user" id="InputUsername" name="Username" placeholder="Kullanıcı Adı">
+                  <input type="text" class="form-control form-control-user" id="InputUsername" name="Username"
+                    placeholder="Kullanıcı Adı">
                 </div>
                 <div class="form-group">
-                  <input type="email" class="form-control form-control-user" id="InputEmail" name="Email" placeholder="Email Adresi">
+                  <input type="email" class="form-control form-control-user" id="InputEmail" name="Email"
+                    placeholder="Email Adresi">
                 </div>
+                <div class="alert alert-danger" id="passwdAlert" role="alert">
+                        Girilen parolalar birbiriyle eşleşmiyor!
+                    </div>
                 <div class="form-group row">
                   <div class="col-sm-6 mb-3 mb-sm-0">
-                    <input type="password" class="form-control form-control-user" id="InputPassword" name="Password" placeholder="Parola">
+                    <input type="password" class="form-control form-control-user" id="InputPassword" name="Password"
+                      placeholder="Parola">
                   </div>
                   <div class="col-sm-6">
-                    <input type="password" class="form-control form-control-user" id="RepeatPassword" placeholder="Parola Tekrar">
+                    <input type="password" class="form-control form-control-user" id="RepeatPassword"
+                      placeholder="Parola Tekrar">
                   </div>
                 </div>
                 <button type="submit" class="btn btn-primary btn-user btn-block">
@@ -88,7 +95,22 @@
 
   <!-- Custom scripts for all pages-->
   <script src="~/js/sb-admin-2.min.js"></script>
+<script type="text/javascript">
+    $(()=> $('#passwdAlert').hide())
 
+    function checkPassword() {
+
+    var passwd = document.getElementById("InputPassword");
+    var confirm_passwd = document.getElementById("RepeatPassword");
+      if (passwd.value !== confirm_passwd.value) {
+        confirm_passwd.setCustomValidity("Girilen parolalar eşleşmiyor!");
+        $('#passwdAlert').show();
+        return false;
+      } else {
+        $('#passwdAlert').hide();
+        return true;
+      }
+    }
+  </script>
 </body>
-
 </html>
