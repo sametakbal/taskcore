@@ -127,9 +127,10 @@ namespace taskcore.Controllers
 
 
         [HttpPost]
-        public IActionResult Update(User usr)
+        public async Task<IActionResult> UpdateProfile(User usr)
         {
-            return View();
+            await GetUserDao().Modify(usr);
+            return Redirect("Profile");
         }
 
         public async Task<IActionResult> UpdatePassword(string Code, string Password)

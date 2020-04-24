@@ -42,9 +42,13 @@ namespace taskcore.Dao
             throw new NotImplementedException();
         }
 
-        public Task<bool> Modify(object obj)
+        public async Task<bool> Modify(object obj)
         {
-            throw new NotImplementedException();
+            User tmp = (User) obj;
+            var user = getContext().User.First(w => w.Id == tmp.Id);
+            getContext().Entry(user).CurrentValues.SetValues(tmp);
+            await getContext().SaveChangesAsync();
+            return true;
         }
 
         public Task<bool> Erase(int id)

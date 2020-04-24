@@ -37,7 +37,6 @@ namespace taskcore.Dao
             Project tmp = (Project)obj;
             var project = getContext().Project.First(w => w.Id == tmp.Id);
             getContext().Entry(project).CurrentValues.SetValues(tmp);
-            //getContext().Project.Update(project);
             await getContext().SaveChangesAsync();
             return true;
         }
