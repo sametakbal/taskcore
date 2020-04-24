@@ -1,34 +1,28 @@
+@model taskcore.Models.User
 <div class="container">
     <div class="row">
         <div class="text-center">
-            <form class="user" action="/Account/Register" autocomplete="off" method="POST">
+            <form class="user" asp-action="UpdateProfile" autocomplete="off" method="POST">
                 <div class="form-group text-center">
                     <img src="/img/pp.png" class="rounded" width="200" alt="...">
                 </div>
                 <div class="form-group row">
                     <div class="col-sm-6 mb-3 mb-sm-0">
-                        <input type="text" class="form-control form-control-user" id="FirstName" name="Name" placeholder="Ad">
+                        <input type="hidden" asp-for="Id">
+                        <input type="text" class="form-control form-control-user" asp-for="Name" id="FirstName" placeholder="Ad">
                     </div>
                     <div class="col-sm-6">
-                        <input type="text" class="form-control form-control-user" id="LastName" name="Surname" placeholder="Soyad">
+                        <input type="text" class="form-control form-control-user" id="LastName" asp-for="Surname" placeholder="Soyad">
                     </div>
                 </div>
                 <div class="form-group">
-                    <input type="text" class="form-control form-control-user" id="InputUsername" name="Username" placeholder="Kullanıcı Adı">
+                    <input type="text" class="form-control form-control-user" id="InputUsername" asp-for="Username" placeholder="Kullanıcı Adı">
                 </div>
                 <div class="form-group">
-                    <input type="email" class="form-control form-control-user" id="InputEmail" name="Email" placeholder="Email Adresi">
+                    <input type="email" class="form-control form-control-user" id="InputEmail" asp-for="Email" placeholder="Email Adresi">
                 </div>
                 <div class="form-group">
-                    <textarea type="text" class="form-control form-control-user" id="InputAbout" name="About" placeholder="Hakkında"></textarea>
-                </div>
-                <div class="form-group row">
-                    <div class="col-sm-6 mb-3 mb-sm-0">
-                        <input type="password" class="form-control form-control-user" id="InputPassword" name="Password" placeholder="Parola">
-                    </div>
-                    <div class="col-sm-6">
-                        <input type="password" class="form-control form-control-user" id="RepeatPassword" placeholder="Parola Tekrar">
-                    </div>
+                    <textarea type="text" class="form-control form-control-user" id="InputAbout" asp-for="About" placeholder="Hakkında"></textarea>
                 </div>
                 <button type="submit" class="btn btn-primary btn-user btn-block">
                       Bilgileri güncelle

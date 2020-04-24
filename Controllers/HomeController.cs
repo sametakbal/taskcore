@@ -13,36 +13,26 @@ namespace taskcore.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
         private DatabaseContext _context;
-
-        public HomeController(ILogger<HomeController> logger)
-        {
-            _logger = logger;
-        }
-
         public IActionResult Index()
         {
             return View();
         }
-
-        public async Task<IActionResult> UserProfile(int Id)
+        public async Task<IActionResult> AcceptRequest(int MateId)
         {
-            User user = await getContext().User.FindAsync(Id);
-            return Json(user);
+            UserMates userMates = getContext().UserMates.FirstOrDefault(w => w.MateId == MateId);
+            userMates.State = (State)2;
+            getContext().Update(userMates);
+            await getContext().SaveChangesAsync();
+            return Json(true);
         }
-
-        public IActionResult GetFriendState(int Id)
+        public async Task<IActionResult> DeleteRequest(int MateId)
         {
-            int? userId = HttpContext.Session.GetInt32("id");
-            UserMates userMates = getContext().UserMates.FirstOrDefault(w => (w.UserId == userId || w.MateId == userId) && (w.MateId == Id || w.UserId == Id));
-            if (userMates == null)
-            {
-                userMates = new UserMates();
-            }
-            return Json((int)userMates.State);
+            UserMates userMates = getContext().UserMates.FirstOrDefault(w => w.MateId == MateId);
+            getContext().Remove(userMates);
+            await getContext().SaveChangesAsync();
+            return Json(true);
         }
-
         public async Task<IActionResult> FriendRequest(int Id)
         {
             User user = await getContext().User.FindAsync(Id);
@@ -59,25 +49,10 @@ namespace taskcore.Controllers
 
             return Json(true);
         }
-
-        public async Task<IActionResult> DeleteRequest(int MateId){
-            UserMates userMates = getContext().UserMates.FirstOrDefault(w => w.MateId == MateId);
-            getContext().Remove(userMates);
-            await getContext().SaveChangesAsync();
-            return Json(true);
-        }
-
-        public async Task<IActionResult> AcceptRequest(int MateId){
-            UserMates userMates = getContext().UserMates.FirstOrDefault(w => w.MateId == MateId);
-            userMates.State = (State)2;
-            getContext().Update(userMates);
-            await getContext().SaveChangesAsync();
-            return Json(true);
-        }
         public async Task<IActionResult> GetFriendRequests()
         {
             int? userId = HttpContext.Session.GetInt32("id");
-            var list =  getContext().UserMates.Where(w=> w.MateId == userId && w.State == (State)1 ).ToList();
+            var list = getContext().UserMates.Where(w => w.MateId == userId && w.State == (State)1).ToList();
             foreach (var item in list)
             {
                 item.User = await getContext().User.FindAsync(item.UserId);
@@ -85,8 +60,16 @@ namespace taskcore.Controllers
 
             return Json(list);
         }
-
-
+        public IActionResult GetFriendState(int Id)
+        {
+            int? userId = HttpContext.Session.GetInt32("id");
+            UserMates userMates = getContext().UserMates.FirstOrDefault(w => (w.UserId == userId || w.MateId == userId) && (w.MateId == Id || w.UserId == Id));
+            if (userMates == null)
+            {
+                userMates = new UserMates();
+            }
+            return Json((int)userMates.State);
+        }
 
         public IActionResult Mates(string term)
         {
@@ -95,6 +78,18 @@ namespace taskcore.Controllers
             (w.Username.Contains(term) || w.Name.Contains(term) || w.Surname.Contains(term)) && w.Id != userId).OrderBy(w => w.Name).ToList();
 
             return View(list);
+        }
+        public IActionResult MatesList(string term)
+        {
+            int? userId = HttpContext.Session.GetInt32("id");
+            List<User> list = getContext().User.ToList();
+            return View(list);
+        }
+
+        public async Task<IActionResult> UserProfile(int Id)
+        {
+            User user = await getContext().User.FindAsync(Id);
+            return Json(user);
         }
 
         public DatabaseContext getContext()

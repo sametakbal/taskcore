@@ -45,10 +45,10 @@ namespace taskcore.Dao
         {
             if (!optionsBuilder.IsConfigured)
             {
-                //optionsBuilder.UseSqlServer("Server=database-1.cgp0s6mfyxez.eu-west-1.rds.amazonaws.com,61433;Initial Catalog=taskcoredb;User ID=sametakbal;Password=Blcbm2811Database!;");
+            optionsBuilder.UseSqlServer("Server=database-1.cgp0s6mfyxez.eu-west-1.rds.amazonaws.com,61433;Initial Catalog=taskcoredb;User ID=sametakbal;Password=Blcbm2811Database!;");
 
-                optionsBuilder.UseSqlServer("Server=localhost;Database=taskcoredb;User Id=SA;Password=Blcbm8745Database;")
-                .EnableSensitiveDataLogging();
+               /* optionsBuilder.UseSqlServer("Server=localhost;Database=taskcoredb;User Id=SA;Password=Blcbm8745Database;")
+                .EnableSensitiveDataLogging();*/
             }
         }
 

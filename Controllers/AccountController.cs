@@ -18,6 +18,7 @@ namespace taskcore.Controllers
 
         private readonly DatabaseContext _context;
         private UserDao userDao = null;
+        private User user = null;
         public AccountController(DatabaseContext context)
         {
             _context = context;
@@ -31,24 +32,6 @@ namespace taskcore.Controllers
             }
             return View();
         }
-        public IActionResult SignUp()
-        {
-            if (HttpContext.Session.GetInt32("id").HasValue)
-            {
-                return Redirect("/Project/Index");
-            }
-            return View();
-        }
-
-        public IActionResult Profile()
-        {
-            if (!HttpContext.Session.GetInt32("id").HasValue)
-            {
-                return Redirect("Index");
-            }
-            return View();
-        }
-
         public IActionResult ForgotPassword()
         {
             if (HttpContext.Session.GetInt32("id").HasValue)
@@ -57,34 +40,6 @@ namespace taskcore.Controllers
             }
             return View();
         }
-
-         public IActionResult ResetPassword()
-        {
-
-            return View();
-        }
-
-        public IActionResult None()
-        {
-            return View();
-        }
-
-        public async Task<IActionResult> Statistics()
-        {
-            int id = (int)HttpContext.Session.GetInt32("id");
-            List<ProjectsProgress> res = await ProjectDao.getInstance().ProgressList(id);
-            return View(res);
-        }
-
-        public IActionResult Settings()
-        {
-            if (!HttpContext.Session.GetInt32("id").HasValue)
-            {
-                return Redirect("NotFound");
-            }
-            return View();
-        }
-
         [HttpPost]
         public async Task<IActionResult> Login(User model)
         {
@@ -99,24 +54,88 @@ namespace taskcore.Controllers
                 return Redirect("/Project/Index");
             }
 
-            ViewBag.LoginError = true;
             return RedirectToAction(nameof(Index));
         }
-
         public IActionResult LogOut()
         {
             HttpContext.Session.Clear();
             return Redirect("Index");
         }
-        public async Task<IActionResult> Register(User user)
+        public IActionResult None()
         {
-                await GetUserDao().Create(user);
-            return RedirectToAction(nameof(Index));
+            return View();
         }
 
-        public async Task<IActionResult> UpdatePassword(string Code,string Password)
+        public IActionResult Profile()
         {
-            if(MailManager.getCode() == Code){
+            if (!HttpContext.Session.GetInt32("id").HasValue)
+            {
+                return Redirect("Index");
+            }
+
+            return View(GetUser());
+        }
+        public async Task<IActionResult> Register(User user)
+        {
+            await GetUserDao().Create(user);
+            return RedirectToAction(nameof(Index));
+        }
+        public IActionResult ResetPassword()
+        {
+            return View();
+        }
+        public async Task<IActionResult> SendACode(string email)
+        {
+            User tmp = await _context.User.FirstOrDefaultAsync(w => w.Email == email);
+
+            if (tmp != null)
+            {
+                UserManager.SetCurrentUser(tmp);
+                await MailManager.ResetPasswordCode();
+            }
+            else
+            {
+                return Json(false);
+            }
+            return Redirect("ResetPassword");
+        }
+
+        public IActionResult Settings()
+        {
+            if (!HttpContext.Session.GetInt32("id").HasValue)
+            {
+                return Redirect("NotFound");
+            }
+            return View();
+        }
+        public IActionResult SignUp()
+        {
+            if (HttpContext.Session.GetInt32("id").HasValue)
+            {
+                return Redirect("/Project/Index");
+            }
+            return View();
+        }
+
+        public async Task<IActionResult> Statistics()
+        {
+            int id = (int)HttpContext.Session.GetInt32("id");
+            List<ProjectsProgress> res = await ProjectDao.getInstance().ProgressList(id);
+            return View(res);
+        }
+
+
+
+        [HttpPost]
+        public IActionResult Update(User usr)
+        {
+            return View();
+        }
+
+        public async Task<IActionResult> UpdatePassword(string Code, string Password)
+        {
+            if (MailManager.getCode() == Code)
+            {
                 User tmp = UserManager.GetCurrentUser();
                 tmp.Password = Password;
                 _context.Update(tmp);
@@ -127,20 +146,15 @@ namespace taskcore.Controllers
         }
 
 
-        public async Task<IActionResult> SendACode(string email){
-            User tmp = await _context.User.FirstOrDefaultAsync(w => w.Email == email);
 
-            if(tmp != null){
-                UserManager.SetCurrentUser(tmp);
-                await MailManager.ResetPasswordCode();
-            }else{
-                return Json(false);
-            }
-            return Redirect("ResetPassword");
-        }
 
-        public UserDao GetUserDao(){
+        public UserDao GetUserDao()
+        {
             return userDao == null ? userDao = UserDao.getInstance() : userDao;
+        }
+        public User GetUser()
+        {
+            return user == null ? user = UserManager.GetCurrentUser() : user;
         }
 
 

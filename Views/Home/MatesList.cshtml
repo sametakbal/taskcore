@@ -1,0 +1,24 @@
+@model IEnumerable<taskcore.Models.User>
+
+<table class="table table-striped table-hover">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Ad</th>
+      <th scope="col">Soyad</th>
+      <th scope="col">Kullanıcı Adı</th>
+    </tr>
+  </thead>
+  <tbody>
+      @foreach (var item in Model)
+      {
+     <tr>
+      <th scope="row"></th>
+      <td>@item.Name</td>
+      <td>@item.Surname</td>
+      <td>&#64;@item.Username</td>
+    </tr>   
+      }
+    
+  </tbody>
+</table>    
