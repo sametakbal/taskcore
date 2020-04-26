@@ -21,6 +21,11 @@ namespace taskcore.Manager
             user = usr;
         }
 
+        public static void ClearUser()
+        {
+            user = null;
+        }
+
         public UserDao GetUserDao(){
             return userDao == null ? userDao = UserDao.getInstance() : userDao;
         }
