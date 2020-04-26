@@ -20,9 +20,16 @@ namespace taskcore.Controllers
         }
         public async Task<IActionResult> AcceptRequest(int MateId)
         {
-            UserMates userMates = getContext().UserMates.FirstOrDefault(w => w.MateId == MateId);
-            userMates.State = (State)2;
-            getContext().Update(userMates);
+            UserMates userMates1 = getContext().UserMates.FirstOrDefault(w => w.MateId == MateId);
+            userMates1.State = State.Friend;
+            UserMates userMates2 = new UserMates{
+                UserId = userMates1.MateId,
+                MateId = userMates1.UserId,
+                State = State.Friend
+            };
+
+            getContext().Update(userMates1);
+            getContext().Add(userMates2);
             await getContext().SaveChangesAsync();
             return Json(true);
         }
@@ -63,7 +70,7 @@ namespace taskcore.Controllers
         public IActionResult GetFriendState(int Id)
         {
             int? userId = HttpContext.Session.GetInt32("id");
-            UserMates userMates = getContext().UserMates.FirstOrDefault(w => (w.UserId == userId || w.MateId == userId) && (w.MateId == Id || w.UserId == Id));
+            UserMates userMates = getContext().UserMates.FirstOrDefault(w => w.UserId == userId);
             if (userMates == null)
             {
                 userMates = new UserMates();

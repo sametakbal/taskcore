@@ -40,6 +40,10 @@ namespace taskcore.Controllers
             }
             return View();
         }
+
+        public IActionResult Friends(){
+            return View(GetUserDao().FriendList());
+        }
         [HttpPost]
         public async Task<IActionResult> Login(User model)
         {
@@ -130,7 +134,7 @@ namespace taskcore.Controllers
         public async Task<IActionResult> UpdateProfile(User usr)
         {
             await GetUserDao().Modify(usr);
-            return Redirect("Profile");
+            return Json(true);
         }
 
         public async Task<IActionResult> UpdatePassword(string Code, string Password)
@@ -141,6 +145,7 @@ namespace taskcore.Controllers
                 tmp.Password = Password;
                 _context.Update(tmp);
                 await _context.SaveChangesAsync();
+                MailManager.cleanCode();
             }
 
             return RedirectToAction(nameof(Index));

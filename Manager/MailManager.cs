@@ -32,6 +32,11 @@ namespace taskcore.Manager
         }
 
 
+        public static void cleanCode(){
+            code = null;
+        }
+
+
         public static string getCode()
         {
             if (code == null)

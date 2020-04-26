@@ -2,7 +2,7 @@
 <div class="container">
     <div class="row">
         <div class="text-center">
-            <form class="user" asp-action="UpdateProfile" autocomplete="off" method="POST">
+            <form id="profil" class="user" asp-action="UpdateProfile" autocomplete="off" method="POST">
                 <div class="form-group text-center">
                     <img src="/img/pp.png" class="rounded" width="200" alt="...">
                 </div>
@@ -32,3 +32,23 @@
         </div>
     </div>
 </div>
+
+@section Scripts{
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<script>
+    $('#profil').on('submit', (e) => {
+        e.preventDefault();
+        const body = new FormData(e.currentTarget);
+        fetch(e.currentTarget.action, {
+            method: 'post',
+            body
+        }).then(res => res.json()).then(res => {
+            Swal.fire(
+                'Güncellendi!',
+                'Güncelleme Başarıyla Tamamlandı.',
+                'success'
+            )
+        });
+    })
+</script>
+}
