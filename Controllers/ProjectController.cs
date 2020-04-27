@@ -68,9 +68,10 @@ namespace taskcore.Controllers
             var project = await getInstance().Detail(id);
             return Json(project);
         }
-        public async Task<IActionResult> ProjectRequest(int mateId,int projectId)
+        [HttpPost]
+        public async Task<IActionResult> ProjectRequest(int Id,int projectId)
         {
-            await getInstance().Request(mateId,projectId);
+            await getInstance().Request(Id,projectId);
             return Json(true);
         }
 

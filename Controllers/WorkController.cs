@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using taskcore.Dao;
@@ -16,6 +17,7 @@ namespace taskcore.Controllers
     public class WorkController : Controller
     {
         private WorkDao instance = null;
+        private UserDao udao = null;
         public async Task<IActionResult> ProgressPercentage(int id)
         {
             return Json(await getInstance().ProgressPercentage(id));
@@ -26,6 +28,19 @@ namespace taskcore.Controllers
             {
                 return Redirect("/Project/Index");
             }
+
+            List<User> friends = GetUserDao().FriendList();
+            List<SelectListItem> flist = new List<SelectListItem>();
+            foreach (var user in friends)
+            {
+                SelectListItem tmp = new SelectListItem
+                {
+                    Text = user.Name+" "+user.Surname,
+                    Value = user.Id.ToString()
+                };
+                flist.Add(tmp);
+            }
+            ViewBag.Friends = flist;
             return View();
         }
 
@@ -72,6 +87,11 @@ namespace taskcore.Controllers
                 instance = WorkDao.getInstance();
             }
             return instance;
+        }
+
+        public UserDao GetUserDao()
+        {
+            return udao == null ? udao = UserDao.getInstance() : udao;
         }
 
         public IActionResult WeekReport()
