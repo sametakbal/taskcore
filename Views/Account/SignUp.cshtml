@@ -30,11 +30,13 @@ Layout =null;
         <div class="row">
           <div class="col-lg-5 d-none d-lg-block bg-register-image"></div>
           <div class="col-lg-7">
-            <div class="p-5">
+        <div class="d-flex justify-content-center">
+        </div>
+            <div class="p-5" >
               <div class="text-center">
                 <h1 class="h4 text-gray-900 mb-4">Tasky Dünyasına Hoşgeldiniz!</h1>
               </div>
-              <form class="user" action="/Account/Register" autocomplete="off" method="POST"
+              <form class="user" id="registerform" action="/Account/Register" autocomplete="off" method="POST"
                 onsubmit="return checkPassword()">
                 <div class="form-group row">
                   <div class="col-sm-6 mb-3 mb-sm-0">

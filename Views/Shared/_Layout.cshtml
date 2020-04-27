@@ -1,7 +1,8 @@
 ﻿@using Microsoft.AspNetCore.Http
+@using taskcore.Manager
 @{
-  string name = Context.Session.GetString("name");
-  string surname = Context.Session.GetString("surname");
+  string name = UserManager.GetCurrentUser().Name;
+  string surname = UserManager.GetCurrentUser().Surname;
 }
 <!DOCTYPE html>
 <html lang="en">

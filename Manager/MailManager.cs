@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.Mail;
 using System.Net;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Builder;
 
 namespace taskcore.Manager
 {
@@ -29,6 +30,23 @@ namespace taskcore.Manager
             await sc.SendMailAsync(msg);
             return true;
 
+        }
+
+        public static async Task<bool> WelcomeMessage(User user)
+        {
+            string mailto =user.Email;
+            string subject = "Task-Core Kayıt";
+            string text = "<h1><b>Sayın "+user.Name+" "+user.Surname+"</b></h1> Task-Core Proje Planlama ve Yönetim sistemine hoşgeldiniz! ";
+            string sender = "noreplytaskcore@gmail.com";
+            MailMessage msg = new MailMessage(sender, mailto, subject, text);
+            msg.IsBodyHtml = true;
+            SmtpClient sc = new SmtpClient("smtp.gmail.com", 587);
+            sc.UseDefaultCredentials = false;
+            NetworkCredential cre = new NetworkCredential(sender, "Taskcore2811");
+            sc.Credentials = cre;
+            sc.EnableSsl = true;
+            await sc.SendMailAsync(msg);
+            return true;
         }
 
 

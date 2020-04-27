@@ -68,6 +68,11 @@ namespace taskcore.Controllers
             var project = await getInstance().Detail(id);
             return Json(project);
         }
+        public async Task<IActionResult> ProjectRequest(int mateId,int projectId)
+        {
+            await getInstance().Request(mateId,projectId);
+            return Json(true);
+        }
 
         public ProjectDao getInstance()
         {

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -44,6 +45,10 @@ namespace taskcore.Controllers
         public IActionResult Friends(){
             return View(GetUserDao().FriendList());
         }
+        public IActionResult FriendsList(){
+            return Json(GetUserDao().FriendList());
+        }
+        
         [HttpPost]
         public async Task<IActionResult> Login(User model)
         {
@@ -82,6 +87,7 @@ namespace taskcore.Controllers
         public async Task<IActionResult> Register(User user)
         {
             await GetUserDao().Create(user);
+            await MailManager.WelcomeMessage(user);
             return RedirectToAction(nameof(Index));
         }
         public IActionResult ResetPassword()

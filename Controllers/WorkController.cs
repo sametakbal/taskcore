@@ -33,6 +33,8 @@ namespace taskcore.Controllers
         {
             return Json(await getInstance().Erase(id));
         }
+
+        
         public async Task<IActionResult> Save(Work work)
         {
             int? userId = HttpContext.Session.GetInt32("id");
@@ -50,7 +52,6 @@ namespace taskcore.Controllers
         public async Task<IActionResult> List(int Id)
         {
             int? userId = HttpContext.Session.GetInt32("id");
-            //   var result = await getContext().Task.Where(w => w.ProjectId == Id && w.UserId == userId).ToListAsync();
             List<Work> result = await getInstance().Read((int)userId, Id);
             return Json(result);
         }

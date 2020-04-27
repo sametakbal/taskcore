@@ -109,5 +109,18 @@ namespace taskcore.Dao
             }
             return wdao;
         }
+
+        public async Task<bool> Request(int mateId,int projectId)
+        {
+            UserProjects usp = new UserProjects
+            {
+                UserId = mateId,
+                ProjectId = projectId,
+                IsAccept = false
+            };
+            await getContext().AddAsync(usp);
+            await getContext().SaveChangesAsync();
+            return true;
+        }
     }
 }
