@@ -68,6 +68,7 @@ namespace taskcore.Controllers
         public IActionResult LogOut()
         {
             HttpContext.Session.Clear();
+            UserManager.ClearUser();
             return Redirect("Index");
         }
         public IActionResult None()

@@ -24,6 +24,18 @@ namespace taskcore.Controllers
             return View();
         }
 
+        public async Task<IActionResult> AcceptRequest(int Id)
+        {
+            await getInstance().Accept(Id);
+            return Json(true);
+        }
+        
+        public async Task<IActionResult> DeleteRequest(int Id)
+        {
+            await getInstance().Decline(Id);
+            return Json(true);
+        }
+
         public async Task<IActionResult> UpdateStatus(int itemid, int statusid)
         {
             await getInstance().ModifyStatus(itemid, statusid);
@@ -69,10 +81,15 @@ namespace taskcore.Controllers
             return Json(project);
         }
         [HttpPost]
-        public async Task<IActionResult> ProjectRequest(int Id,int projectId)
+        public async Task<IActionResult> ProjectRequest(int id,int projectId)
         {
-            await getInstance().Request(Id,projectId);
+            await getInstance().Request(id,projectId);
             return Json(true);
+        }
+        
+        public async Task<IActionResult> ProjectRequestList()
+        {
+            return Json(await  getInstance().RequestList());
         }
 
         public ProjectDao getInstance()

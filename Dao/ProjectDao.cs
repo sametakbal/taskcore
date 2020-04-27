@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using taskcore.Manager;
 using taskcore.Models;
 
 namespace taskcore.Dao
@@ -14,6 +15,27 @@ namespace taskcore.Dao
         private WorkDao wdao=null;
 
         private ProjectDao() { }
+        
+        public async Task<bool> Accept(int id)
+        {
+            UserProjects usp = await getContext().UserProjects
+                .FirstOrDefaultAsync(w => w.UserId == UserManager.GetCurrentUser().Id && w.ProjectId == id);
+            usp.IsAccept = true;
+            getContext().Update(usp);
+
+            await getContext().SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> Decline(int id)
+        {
+            UserProjects usp = await getContext().UserProjects
+                .FirstOrDefaultAsync(w => w.UserId == UserManager.GetCurrentUser().Id && w.ProjectId == id);
+            getContext().Remove(usp);
+
+            await getContext().SaveChangesAsync();
+            return true;
+        }
         public async Task<List<Project>> Read(int id)
         {
             List<Project> result = await getContext().Project.Where(w => getContext().UserProjects
@@ -121,6 +143,16 @@ namespace taskcore.Dao
             await getContext().AddAsync(usp);
             await getContext().SaveChangesAsync();
             return true;
+        }
+
+        public async Task<List<Project>> RequestList()
+        {
+            List<Project> projects = await getContext().Project.Where(w => getContext().UserProjects
+                .Where(e => e.UserId == UserManager.GetCurrentUser().Id && !e.IsAccept)
+                .Select(c => c.ProjectId)
+                .Contains(w.Id)).ToListAsync();
+
+            return projects;
         }
     }
 }

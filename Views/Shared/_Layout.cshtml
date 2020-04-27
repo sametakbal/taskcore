@@ -126,6 +126,7 @@
             </form>
           </div>
         </li>
+        
 
         <!-- Nav Item - Alerts -->
         <li class="nav-item dropdown no-arrow mx-1">
@@ -147,6 +148,22 @@
         </li>
 
         <!-- Nav Item - Messages -->
+          <li class="nav-item dropdown no-arrow mx-1">
+                      <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-envelope fa-fw"></i>
+                        <!-- Counter - Messages -->
+                        <span id="reqcount" class="badge badge-danger badge-counter">+</span>
+                      </a>
+                      <!-- Dropdown - Messages -->
+                      <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="messagesDropdown">
+                        <h6 class="dropdown-header">
+                          Message Center
+                        </h6>
+                      <div id="requestList"></div>
+                      
+                        <a class="dropdown-item text-center small text-gray-500" id="reqnothing">Gösterilecek birşey yok!</a>
+                      </div>
+                    </li>
         <div class="topbar-divider d-none d-sm-block"></div>
 
         <!-- Nav Item - User Information -->
@@ -212,7 +229,8 @@
 <script src="~/js/demo/chart-area-demo.js"></script>
 <script src="~/js/demo/chart-pie-demo.js"></script>
 <script>
-    $(()=> getNotification())
+    $(()=> getNotification(),
+    getProjectRequest())
     function getNotification(){
       $('#counter').hide();
       $('#nothing').hide();
@@ -246,6 +264,39 @@
           
       })
     }
+    
+    function getProjectRequest() {
+                $('#reqcount').hide();
+                $('#reqnothing').hide();
+
+      fetch('/Project/ProjectRequestList')
+      .then(res => res.json())
+      .then(list =>{
+        if (list.length !== 0){
+          $('#reqcount').show();
+        }else{
+           $('#reqnothing').show();
+        }
+        $('#requestList').empty().append(
+                list.map(item => 
+                `<a class="dropdown-item d-flex align-items-center">
+                                                        <div class="mr-3">
+                                                          <div class="icon-circle bg-warning">
+                                             <i class="fas fa-exclamation-triangle text-white"></i>
+                                  </div>
+                             </div>
+                     <div>
+                         ${item.title} projesinden size katılma isteği var!
+                    </div>
+      <div class="btn-group">
+                  <button type="button" onclick="acceptProjectRequest(${item.id})"  class="btn btn-primary btn-sm">Ekle</button>
+                  <button type="button" onclick="deleteProjectRequest(${item.id})" class="btn btn-danger btn-sm">Sil</button>
+                  </div>
+                </a>`
+                )
+        )
+      })
+    }
 
     function deleteRequest(MateId){
       fetch('/Home/DeleteRequest?MateId='+MateId)
@@ -263,6 +314,21 @@
         getNotification();
       })
     }
+    
+    function acceptProjectRequest(id) {
+      fetch('/Project/AcceptRequest?Id='+id)
+      .then(res => res.json())
+      .then(res => {
+        getProjectRequest();
+      })
+    }
+     function deleteProjectRequest(id) {
+          fetch('/Project/DeleteRequest?Id='+id)
+          .then(res => res.json())
+          .then(res => {
+            getProjectRequest();
+          })
+        }
   </script>
 @RenderSection("Scripts", required: false)
 </body>
