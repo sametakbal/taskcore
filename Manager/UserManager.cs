@@ -24,6 +24,12 @@ namespace taskcore.Manager
         public static void ClearUser()
         {
             user = null;
+
+        }
+
+        public static string GetFullName()
+        {
+            return user.Name + " " + user.Surname;
         }
 
         public UserDao GetUserDao(){

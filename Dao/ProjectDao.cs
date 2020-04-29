@@ -142,7 +142,7 @@ namespace taskcore.Dao
             };
             await getContext().AddAsync(usp);
             await getContext().SaveChangesAsync();
-            return true;
+            return await MailManager.ProjectRequestMessage(getContext().User.Find(mateId),getContext().Project.Find(projectId));
         }
 
         public async Task<List<Project>> RequestList()

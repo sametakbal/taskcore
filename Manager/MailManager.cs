@@ -49,6 +49,23 @@ namespace taskcore.Manager
             return true;
         }
 
+        public static async Task<bool> ProjectRequestMessage(User user,Project project)
+        {
+            string mailto = user.Email;
+            string subject = "Task-Core Proje Katılım İsteği";
+            string text = "<h1><b>Sayın " + user.Name + " " + user.Surname + "</b></h1> "+UserManager.GetFullName()+" size "+project.Title+" projesine katılmanız için bir istek gönderdi!";
+            string sender = "noreplytaskcore@gmail.com";
+            MailMessage msg = new MailMessage(sender, mailto, subject, text);
+            msg.IsBodyHtml = true;
+            SmtpClient sc = new SmtpClient("smtp.gmail.com", 587);
+            sc.UseDefaultCredentials = false;
+            NetworkCredential cre = new NetworkCredential(sender, "Taskcore2811");
+            sc.Credentials = cre;
+            sc.EnableSsl = true;
+            await sc.SendMailAsync(msg);
+            return true;
+        }
+
 
         public static void cleanCode(){
             code = null;
