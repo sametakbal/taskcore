@@ -43,6 +43,9 @@
             <button type="button" onclick="$('#AddProject').modal('show')" class="btn btn-facebook btn-block">Proje Ekle + </button>
             <hr>
             <div id="projectList">
+                <div id="loadingicon" class="spinner-border" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
             </div>
         </center>
     </div>
@@ -103,13 +106,17 @@
 </script>
 <script>
     var kanban;
-    $(() => initData());
+    $(document).ready(function () {
+        $('#loadingicon').show();
+        setTimeout(initData, 1000);
+    });
 
     function initData() {
         $('#projectList').empty();
         fetch('/Project/ReadToAll')
             .then(res => res.json())
             .then(list => {
+                $('#loadingicon').hide();
                 kanban = new jKanban({
                     element: '#projectList',
                     addItemButton: true,

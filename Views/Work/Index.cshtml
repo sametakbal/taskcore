@@ -69,6 +69,9 @@
     <div class="card-body">
         <center>
             <div id="workList">
+                <div id="loadingicon" class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
             </div>
         </center>
     </div>
@@ -173,6 +176,7 @@
 <script src="~/js/jkanban.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script type="text/javascript" >
+
     function AddPerson(){
         $('#addPerson').modal('show');
         fetch('/Account/FriendsList')
@@ -291,7 +295,7 @@
             if (result.value) {
                 fetch('/Work/Delete?id=' + work.id)
                     .then(res => {
-                        initData();
+                        setTimeout(initData, 1000);
                         progress();
                         clearWork();
                     })
@@ -310,10 +314,13 @@
     var project;
     var work;
 
-    window.onload = function() {
-      initData();
-      loadProject();
-    }
+    $(document).ready(function () {
+        $('#loadingicon').show();
+        loadProject();
+        setTimeout(initData, 1000);
+    });
+
+  
 
     function addWork() {
         $('#addwork').modal('show');
@@ -362,6 +369,7 @@
         fetch('/Work/List' + window.location.search)
             .then(res => res.json())
             .then(list => {
+                $('#loadingicon').hide();
                 kanban = new jKanban({
                     element: '#workList',
                     addItemButton: true,

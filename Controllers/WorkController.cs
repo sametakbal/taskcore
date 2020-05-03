@@ -64,6 +64,8 @@ namespace taskcore.Controllers
             }
             return Json(true);
         }
+
+        [HttpGet]
         public async Task<IActionResult> List(int Id)
         {
             int? userId = HttpContext.Session.GetInt32("id");

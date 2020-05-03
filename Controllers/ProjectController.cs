@@ -41,7 +41,7 @@ namespace taskcore.Controllers
             await getInstance().ModifyStatus(itemid, statusid);
             return Json(true);
         }
-
+        [HttpGet]
         public async Task<IActionResult> ReadToAll()
         {
             int? userId = HttpContext.Session.GetInt32("id");

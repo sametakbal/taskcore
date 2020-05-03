@@ -17,12 +17,12 @@ namespace taskcore.Controllers
     public class AccountController : Controller
     {
 
-        private readonly DatabaseContext _context;
+        private DatabaseContext _context;
         private UserDao userDao = null;
         private User user = null;
-        public AccountController(DatabaseContext context)
+        public AccountController()
         {
-            _context = context;
+            
         }
 
         public IActionResult Index()
@@ -168,6 +168,11 @@ namespace taskcore.Controllers
         public User GetUser()
         {
             return user == null ? user = UserManager.GetCurrentUser() : user;
+        }
+
+        public DatabaseContext GetContext()
+        {
+            return _context == null ? _context = DatabaseContext.getContext() : _context;
         }
 
 
