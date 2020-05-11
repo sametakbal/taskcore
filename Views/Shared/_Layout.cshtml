@@ -1,8 +1,8 @@
 ﻿@using Microsoft.AspNetCore.Http
 @using taskcore.Manager
 @{
-  string name = UserManager.GetCurrentUser().Name;
-  string surname = UserManager.GetCurrentUser().Surname;
+  string name = Context.Session.GetString("name");
+  string surname = Context.Session.GetString("surname");
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -56,7 +56,7 @@
   <li class="nav-item active">
     <a class="nav-link" href="/Project/Index">
       <i class="fas fa-fw fa-tachometer-alt"></i>
-      <span>Dashboard</span>
+      <span>Panel</span>
     </a>
   </li>
 
@@ -95,7 +95,7 @@
       <!-- Topbar Search -->
       <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search" asp-controller="Home" asp-action="Mates" method="POST">
         <div class="input-group">
-          <input type="text" class="form-control bg-light border-0 small" name="term" placeholder="Ekip Arkadaşı Ara..." aria-label="Search" aria-describedby="basic-addon2">
+          <input type="text" class="form-control bg-light border-0 small" name="term" placeholder="Ekip Arkadaşı Ara..." aria-label="Search" aria-describedby="basic-addon2" required>
           <div class="input-group-append">
             <button class="btn btn-primary" type="submit">
               <i class="fas fa-search fa-sm"></i>
@@ -114,9 +114,9 @@
           </a>
           <!-- Dropdown - Messages -->
           <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in" aria-labelledby="searchDropdown">
-            <form class="form-inline mr-auto w-100 navbar-search">
+            <form class="form-inline mr-auto w-100 navbar-search" asp-controller="Home" asp-action="Mates" method="POST">
               <div class="input-group">
-                <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
+                <input type="text" class="form-control bg-light border-0 small" placeholder="Ekip arkadaşı ara..." aria-label="Search" aria-describedby="basic-addon2" name="term" required>
                 <div class="input-group-append">
                   <button class="btn btn-primary" type="button">
                     <i class="fas fa-search fa-sm"></i>
@@ -157,7 +157,7 @@
                       <!-- Dropdown - Messages -->
                       <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="messagesDropdown">
                         <h6 class="dropdown-header">
-                          Message Center
+                          Mesajlar
                         </h6>
                       <div id="requestList"></div>
                       
@@ -178,7 +178,7 @@
               <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
               Profil Bilgileri
             </a>
-            <a class="dropdown-item" href="#">
+            <a class="dropdown-item" href="/Account/Settings">
               <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
               Ayarlar
             </a>
@@ -229,8 +229,10 @@
 <script src="~/js/demo/chart-area-demo.js"></script>
 <script src="~/js/demo/chart-pie-demo.js"></script>
 <script>
-    $(()=> getNotification(),
-    getProjectRequest())
+    $(document).ready(function () {
+        setTimeout(getNotification, 500);
+        setTimeout(getProjectRequest, 1000);
+    });
     function getNotification(){
       $('#counter').hide();
       $('#nothing').hide();
@@ -298,7 +300,7 @@
       })
     }
 
-    function deleteRequest(MateId){
+    function deleteRequest(MateId) {
       fetch('/Home/DeleteRequest?MateId='+MateId)
       .then(res => res.json())
       .then(res => {
@@ -307,12 +309,13 @@
       })
     }
 
-    function acceptRequest(MateId){
-      fetch('/Home/AcceptRequest?MateId='+MateId)
-      .then(res => res.json())
-      .then(res => {
-        getNotification();
-      })
+    function acceptRequest(MateId) {
+        fetch('/Home/AcceptRequest?MateId=' + MateId)
+            .then(res => res.json())
+            .then(res => {
+                getNotification();
+            })
+      
     }
     
     function acceptProjectRequest(id) {

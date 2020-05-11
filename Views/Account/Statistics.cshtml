@@ -12,27 +12,40 @@
                 <div class="progress-bar" role="progressbar" style="width: @item.Progress%" aria-valuenow="@item.Progress" aria-valuemin="0" aria-valuemax="100"></div>
             </div>
             }
+            @if (Model.Count() == 0)
+            {
+                <h4>Şu anda bir projeniz bulunmamaktadır.</h4>
+            }
 
         </div>
     </div>
     <div class="card shadow mb-4">
-        <div class="card-header py-3">
+        <div class="card-header py-3" >
             <h6 class="m-0 font-weight-bold text-primary">Bu hafta bitirilen görev sayısı</h6>
         </div>
         <div class="card-body">
-            <canvas id="myChart"></canvas>
+            <div class="text-center" id="loadingicon" >
+                <div class="spinner-grow" style="width: 3rem; height: 3rem;" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+                </div>
+                <canvas id="myChart"></canvas>
+            </div>
         </div>
-    </div>
 
     @section Scripts{
     <script>
-        $(() => loadChart());
+        $(document).ready(function () {
+            $('#loadingicon').show();
+            setTimeout(loadChart, 1000);
+        });
 
         function loadChart() {
             var ctx = document.getElementById('myChart').getContext('2d');
             fetch('/Work/WeekReport')
                 .then(res => res.json())
                 .then(list => {
+                    $('#loadingicon').hide();
                     var myChart = new Chart(ctx, {
                         type: 'bar',
                         data: {

@@ -1,9 +1,9 @@
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using taskcore.Manager;
 using taskcore.Models;
 
@@ -29,12 +29,13 @@ namespace taskcore.Dao
             return user;
         }
 
-        public List<User> FriendList()
+        public List<User> FriendList(int id)
         {
             List<User> flist = new List<User>();
-            List<UserMates> userMates = getContext().UserMates.Where(w=> w.UserId == GetUser().Id).ToList();
-            foreach(var item in userMates){
-                var tmp = getContext().User.FirstOrDefault(w=>w.Id == item.MateId) ;
+            List<UserMates> userMates = getContext().UserMates.Where(w => w.UserId == id).ToList();
+            foreach (var item in userMates)
+            {
+                var tmp = getContext().User.FirstOrDefault(w => w.Id == item.MateId);
                 flist.Add(tmp);
             }
             return flist;
@@ -64,14 +65,52 @@ namespace taskcore.Dao
             return true;
         }
 
-        public Task<bool> Erase(int id)
+        public async Task<bool> Erase(int id)
         {
-            throw new NotImplementedException();
+            var user = await getContext().User.FindAsync(id);
+            getContext().Remove(user);
+            await getContext().SaveChangesAsync();
+            return true;
         }
 
-        public User GetUser()
+        public async Task<bool> RemoveFriend(int uid,int mid)
         {
-            return user == null ? user = UserManager.GetCurrentUser() : user;
+            UserMates usm1 = await getContext().UserMates.FirstOrDefaultAsync(w=> w.UserId == uid && w.MateId==mid);
+            UserMates usm2 = await getContext().UserMates.FirstOrDefaultAsync(w=> w.UserId == mid && w.MateId==uid);
+
+            getContext().Remove(usm1);
+            getContext().Remove(usm2);
+            await getContext().SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<User> GetUser(int id)
+        {
+            return user == null ? user = await getContext().User.FindAsync(id): user;
+        }
+
+        public async Task<User> Find(string email)
+        {
+            return await getContext().User.FirstOrDefaultAsync(w => w.Email == email);
+        }
+
+        public async Task<bool> InserCode(PasswordCode passwordCode)
+        {
+            await getContext().AddAsync(passwordCode);
+            await getContext().SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<PasswordCode>  getPasswordCode(string code)
+        {
+             return await getContext().PasswordCode.FirstOrDefaultAsync(w => w.Code.Equals(code));
+        }
+
+        public async Task<bool> RemoveCode(PasswordCode psd)
+        {
+            getContext().Remove(psd);
+            await getContext().SaveChangesAsync();
+            return true;
         }
     }
 }

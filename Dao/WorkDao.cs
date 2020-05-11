@@ -1,9 +1,8 @@
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using taskcore.Models;
 
 namespace taskcore.Dao
@@ -43,7 +42,6 @@ namespace taskcore.Dao
         public async Task<bool> Modify(object obj)
         {
             Work tmp = (Work)obj;
-    //        getContext().Update(work);
             var work = getContext().Work.First(w => w.Id == tmp.Id);
             getContext().Entry(work).CurrentValues.SetValues(tmp);
             await getContext().SaveChangesAsync();

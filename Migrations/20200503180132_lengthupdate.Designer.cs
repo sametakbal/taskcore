@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using taskcore.Dao;
 
 namespace taskcore.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20200503180132_lengthupdate")]
+    partial class lengthupdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -53,31 +55,6 @@ namespace taskcore.Migrations
                     b.HasIndex("SenderId");
 
                     b.ToTable("Mail");
-                });
-
-            modelBuilder.Entity("taskcore.Models.PasswordCode", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Code")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(6)")
-                        .HasMaxLength(6);
-
-                    b.Property<DateTime>("GeneratedTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("PasswordCode");
                 });
 
             modelBuilder.Entity("taskcore.Models.Project", b =>
@@ -273,15 +250,6 @@ namespace taskcore.Migrations
                     b.HasOne("taskcore.Models.User", "Sender")
                         .WithMany()
                         .HasForeignKey("SenderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("taskcore.Models.PasswordCode", b =>
-                {
-                    b.HasOne("taskcore.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

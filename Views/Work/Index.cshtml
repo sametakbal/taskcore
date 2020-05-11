@@ -102,7 +102,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" onclick="deleteWork()" id="deleteBtn" class="btn btn-danger">Sil</button>
+                    <button type="button" onclick="deleteWork()" id="deleteWorkBtn" class="btn btn-danger">Sil</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
                     <button type="submit" id="saveBtn" class="btn btn-primary">Oluştur</button>
                     <button type="submit" id="updateBtn" class="btn btn-light">Güncelle</button>
@@ -142,7 +142,7 @@
                 <div class="modal-footer">
                     <button type="button" onclick="deleteProject()" id="deleteBtn" class="btn btn-danger">Sil</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
-                    <button type="submit" id="updateBtn" class="btn btn-light">Güncelle</button>
+                    <button type="submit" id="updateprojBtn" class="btn btn-light">Güncelle</button>
                 </div>
             </form>
 
@@ -317,7 +317,7 @@
     $(document).ready(function () {
         $('#loadingicon').show();
         loadProject();
-        setTimeout(initData, 1000);
+        setTimeout(initData, 1500);
     });
 
   

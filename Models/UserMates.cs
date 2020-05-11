@@ -1,9 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-
 namespace taskcore.Models
 {
     public class UserMates
@@ -19,7 +13,7 @@ namespace taskcore.Models
 
         public State State { get; set; }
     }
-       public enum State
+    public enum State
     {
         NoConnection,
         RequestSent,

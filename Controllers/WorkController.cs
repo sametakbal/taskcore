@@ -1,13 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Threading.Tasks;
 using taskcore.Dao;
 using taskcore.Models;
 
@@ -28,14 +24,14 @@ namespace taskcore.Controllers
             {
                 return Redirect("/Project/Index");
             }
-
-            List<User> friends = GetUserDao().FriendList();
+            int? uid = HttpContext.Session.GetInt32("id");
+            List<User> friends = GetUserDao().FriendList(uid.Value);
             List<SelectListItem> flist = new List<SelectListItem>();
             foreach (var user in friends)
             {
                 SelectListItem tmp = new SelectListItem
                 {
-                    Text = user.Name+" "+user.Surname,
+                    Text = user.Name + " " + user.Surname,
                     Value = user.Id.ToString()
                 };
                 flist.Add(tmp);
@@ -49,7 +45,7 @@ namespace taskcore.Controllers
             return Json(await getInstance().Erase(id));
         }
 
-        
+
         public async Task<IActionResult> Save(Work work)
         {
             int? userId = HttpContext.Session.GetInt32("id");

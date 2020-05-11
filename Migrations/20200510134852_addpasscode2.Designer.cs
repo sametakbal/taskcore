@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using taskcore.Dao;
 
 namespace taskcore.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20200510134852_addpasscode2")]
+    partial class addpasscode2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -64,8 +66,8 @@ namespace taskcore.Migrations
 
                     b.Property<string>("Code")
                         .IsRequired()
-                        .HasColumnType("nvarchar(6)")
-                        .HasMaxLength(6);
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
 
                     b.Property<DateTime>("GeneratedTime")
                         .HasColumnType("datetime2");

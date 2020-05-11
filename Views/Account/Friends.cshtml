@@ -1,27 +1,35 @@
 @model IEnumerable<taskcore.Models.User>
 
 
-
+@if (Model.Count() == 0)
+{
+    <h2>Henüz hiç arkadaşınız bulunmamakta</h2>
+}
+else
+{
 <table class="table">
     <thead>
-    <tr>
-        <th scope="col">Ad </th>
-        <th scope="col">Soyad</th>
-        <th scope="col">Handle</th>
-          <th scope="col">#</th>
-    </tr>
+        <tr>
+            <th scope="col">Ad </th>
+            <th scope="col">Soyad</th>
+            <th scope="col">Handle</th>
+            <th scope="col">#</th>
+        </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
-        {    <tr>
 
-            <td>@item.Name</td>
-            <td>@item.Surname</td>
-            <td>@item.Username</td>
-            <td><button class="btn btn-danger" >Arkadaşlıktan çıkar</button></td>
-                                                                            </tr>
+        @foreach (var item in Model)
+        {
+            <tr>
+
+                <td>@item.Name</td>
+                <td>@item.Surname</td>
+                <td>@item.Username</td>
+                <td><a class="btn btn-danger" asp-action="Remove" asp-route-id="@item.Id">Arkadaşlıktan çıkar</a></td>
+            </tr>
 
         }
-    
+
     </tbody>
 </table>
+}

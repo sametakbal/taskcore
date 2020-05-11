@@ -1,12 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Threading.Tasks;
 using taskcore.Dao;
 using taskcore.Models;
 
@@ -16,7 +12,7 @@ namespace taskcore.Controllers
     public class ProjectController : Controller
     {
         private ProjectDao instance = null;
-        
+
 
         public IActionResult Index()
         {
@@ -26,13 +22,16 @@ namespace taskcore.Controllers
 
         public async Task<IActionResult> AcceptRequest(int Id)
         {
-            await getInstance().Accept(Id);
+            int? uid = HttpContext.Session.GetInt32("id");
+            await getInstance().Accept(Id, uid.Value);
             return Json(true);
         }
-        
+
         public async Task<IActionResult> DeleteRequest(int Id)
         {
-            await getInstance().Decline(Id);
+            int? uid = HttpContext.Session.GetInt32("id");
+
+            await getInstance().Decline(Id,uid.Value);
             return Json(true);
         }
 
@@ -81,15 +80,17 @@ namespace taskcore.Controllers
             return Json(project);
         }
         [HttpPost]
-        public async Task<IActionResult> ProjectRequest(int id,int projectId)
+        public async Task<IActionResult> ProjectRequest(int id, int projectId)
         {
-            await getInstance().Request(id,projectId);
+            await getInstance().Request(id, projectId);
             return Json(true);
         }
-        
+
         public async Task<IActionResult> ProjectRequestList()
         {
-            return Json(await  getInstance().RequestList());
+            int? uid = HttpContext.Session.GetInt32("id");
+
+            return Json(await getInstance().RequestList(uid.Value));
         }
 
         public ProjectDao getInstance()

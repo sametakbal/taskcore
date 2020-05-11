@@ -1,11 +1,9 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using taskcore.Dao;
 using taskcore.Models;
 
@@ -18,12 +16,15 @@ namespace taskcore.Controllers
         {
             return View();
         }
+
+        [HttpGet]
         public async Task<IActionResult> AcceptRequest(int MateId)
         {
             UserMates userMates1 = getContext().UserMates.FirstOrDefault(w => w.UserId == MateId);
             userMates1.State = State.Friend;
             getContext().Update(userMates1);
-            UserMates userMates2 = new UserMates{
+            UserMates userMates2 = new UserMates
+            {
                 UserId = userMates1.MateId,
                 MateId = userMates1.UserId,
                 State = State.Friend
@@ -32,6 +33,7 @@ namespace taskcore.Controllers
             await getContext().SaveChangesAsync();
             return Json(true);
         }
+        [HttpPost]
         public async Task<IActionResult> DeleteRequest(int MateId)
         {
             UserMates userMates = getContext().UserMates.FirstOrDefault(w => w.UserId == MateId);
@@ -69,7 +71,7 @@ namespace taskcore.Controllers
         public IActionResult GetFriendState(int Id)
         {
             int? userId = HttpContext.Session.GetInt32("id");
-            UserMates userMates = getContext().UserMates.FirstOrDefault(w =>w.UserId == (int)userId && w.MateId == Id);
+            UserMates userMates = getContext().UserMates.FirstOrDefault(w => w.UserId == (int)userId && w.MateId == Id);
             if (userMates == null)
             {
                 userMates = new UserMates();

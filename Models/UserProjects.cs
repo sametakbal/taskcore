@@ -1,9 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-
 namespace taskcore.Models
 {
     public class UserProjects
@@ -15,7 +9,7 @@ namespace taskcore.Models
         public Project Project { get; set; }
         public int ProjectId { get; set; }
 
-        public bool IsAccept{get;set;}=false;
+        public bool IsAccept { get; set; } = false;
     }
 
 }

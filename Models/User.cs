@@ -1,6 +1,4 @@
-using System;
 using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Mvc;
 
 namespace taskcore.Models
 {
@@ -18,13 +16,14 @@ namespace taskcore.Models
         public string Username { get; set; }
         [Required]
         [EmailAddress]
+        [StringLength(50)]
         public string Email { get; set; }
         [Required]
         [StringLength(20)]
         public string Password { get; set; }
 
         [StringLength(1000)]
-        public string About{get;set;}="Bir bilgi girilmedi";
+        public string About { get; set; } = "Bir bilgi girilmedi";
 
     }
 }

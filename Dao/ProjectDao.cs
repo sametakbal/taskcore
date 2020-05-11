@@ -1,9 +1,9 @@
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using taskcore.Manager;
 using taskcore.Models;
 
@@ -12,14 +12,14 @@ namespace taskcore.Dao
     public class ProjectDao : Dao, IDao<Project>
     {
         private static ProjectDao instance = null;
-        private WorkDao wdao=null;
+        private WorkDao wdao = null;
 
         private ProjectDao() { }
-        
-        public async Task<bool> Accept(int id)
+
+        public async Task<bool> Accept(int id,int uid)
         {
             UserProjects usp = await getContext().UserProjects
-                .FirstOrDefaultAsync(w => w.UserId == UserManager.GetCurrentUser().Id && w.ProjectId == id);
+                .FirstOrDefaultAsync(w => w.UserId == uid && w.ProjectId == id);
             usp.IsAccept = true;
             getContext().Update(usp);
 
@@ -27,10 +27,10 @@ namespace taskcore.Dao
             return true;
         }
 
-        public async Task<bool> Decline(int id)
+        public async Task<bool> Decline(int id, int uid)
         {
             UserProjects usp = await getContext().UserProjects
-                .FirstOrDefaultAsync(w => w.UserId == UserManager.GetCurrentUser().Id && w.ProjectId == id);
+                .FirstOrDefaultAsync(w => w.UserId == uid && w.ProjectId == id);
             getContext().Remove(usp);
 
             await getContext().SaveChangesAsync();
@@ -47,10 +47,10 @@ namespace taskcore.Dao
 
         public async Task<bool> Insert(object obj)
         {
-            Project project = (Project)obj; 
+            Project project = (Project)obj;
             await getContext().AddAsync(project);
             await getContext().SaveChangesAsync();
-            
+
             return true;
         }
 
@@ -102,21 +102,26 @@ namespace taskcore.Dao
             return true;
         }
 
-        public async Task<Project> Detail(int id){
-           return await getContext().Project.FindAsync(id);
+        public async Task<Project> Detail(int id)
+        {
+            return await getContext().Project.FindAsync(id);
         }
 
-        public async Task<bool> AddUserProject(Object obj){
-            UserProjects usp = (UserProjects) obj;
+        public async Task<bool> AddUserProject(Object obj)
+        {
+            UserProjects usp = (UserProjects)obj;
             await getContext().AddAsync(usp);
-            await getContext().SaveChangesAsync();            
+            await getContext().SaveChangesAsync();
             return true;
         }
 
-        public async Task<List<ProjectsProgress>> ProgressList(int userId){
+        public async Task<List<ProjectsProgress>> ProgressList(int userId)
+        {
             List<ProjectsProgress> result = new List<ProjectsProgress>();
-            foreach(var item in await Read(userId)){
-                ProjectsProgress tmp = new ProjectsProgress{
+            foreach (var item in await Read(userId))
+            {
+                ProjectsProgress tmp = new ProjectsProgress
+                {
                     Project = item,
                     Progress = await GetWorkDao().ProgressPercentage(item.Id)
                 };
@@ -125,14 +130,16 @@ namespace taskcore.Dao
             return result;
         }
 
-        public WorkDao GetWorkDao(){
-            if(wdao == null){
+        public WorkDao GetWorkDao()
+        {
+            if (wdao == null)
+            {
                 wdao = WorkDao.getInstance();
             }
             return wdao;
         }
 
-        public async Task<bool> Request(int mateId,int projectId)
+        public async Task<bool> Request(int mateId, int projectId)
         {
             UserProjects usp = new UserProjects
             {
@@ -142,13 +149,13 @@ namespace taskcore.Dao
             };
             await getContext().AddAsync(usp);
             await getContext().SaveChangesAsync();
-            return await MailManager.ProjectRequestMessage(getContext().User.Find(mateId),getContext().Project.Find(projectId));
+            return await MailManager.ProjectRequestMessage(getContext().User.Find(mateId), getContext().Project.Find(projectId));
         }
 
-        public async Task<List<Project>> RequestList()
+        public async Task<List<Project>> RequestList(int id)
         {
             List<Project> projects = await getContext().Project.Where(w => getContext().UserProjects
-                .Where(e => e.UserId == UserManager.GetCurrentUser().Id && !e.IsAccept)
+                .Where(e => e.UserId == id && !e.IsAccept)
                 .Select(c => c.ProjectId)
                 .Contains(w.Id)).ToListAsync();
 

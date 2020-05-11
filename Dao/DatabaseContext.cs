@@ -1,4 +1,3 @@
-using System;
 using Microsoft.EntityFrameworkCore;
 using taskcore.Models;
 
@@ -26,26 +25,29 @@ namespace taskcore.Dao
         public DbSet<UserWorks> UserWorks { get; set; }
         public DbSet<UserMates> UserMates { get; set; }
         public DbSet<Mail> Mail { get; set; }
+        public DbSet<PasswordCode> PasswordCode{ get; set; }
+
 
         public static DatabaseContext getContext()
         {
-                if (_context == null)
+            if (_context == null)
+            {
+                lock (padlock)
                 {
-                    lock (padlock)
+                    if (_context == null)
                     {
-                        if (_context == null)
-                        {
-                            _context = new DatabaseContext();
-                        }
+                        _context = new DatabaseContext();
                     }
                 }
-                return _context;
+            }
+            return _context;
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Server=DESKTOP-9EK8BDA\\SQLEXPRESS;Database=taskcoredb;Trusted_Connection=True");
+                //optionsBuilder.UseSqlServer("Server=34.65.150.41;Initial Catalog=taskcoredb;User ID=sqlserver;Password=Taskcoredb2811?;");
+                optionsBuilder.UseSqlServer("Server=localhost;Database=taskcoredb;Trusted_Connection=True;");
             }
         }
 

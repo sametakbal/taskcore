@@ -1,4 +1,4 @@
-@{
+﻿@{
 Layout =null;
 }
 <!DOCTYPE html>
@@ -24,95 +24,114 @@ Layout =null;
 </head>
 
 <body class="bg-gradient-primary">
-  <div class="container">
-    <div class="card o-hidden border-0 shadow-lg my-5">
-      <div class="card-body p-0">
-        <div class="row">
-          <div class="col-lg-5 d-none d-lg-block bg-register-image"></div>
-          <div class="col-lg-7">
-        <div class="d-flex justify-content-center">
-        </div>
-            <div class="p-5" >
-              <div class="text-center">
-                <h1 class="h4 text-gray-900 mb-4">Tasky Dünyasına Hoşgeldiniz!</h1>
-              </div>
-              <form class="user" id="registerform" action="/Account/Register" autocomplete="off" method="POST"
-                onsubmit="return checkPassword()">
-                <div class="form-group row">
-                  <div class="col-sm-6 mb-3 mb-sm-0">
-                    <input type="text" class="form-control form-control-user" id="FirstName" name="Name"
-                      placeholder="Ad">
-                  </div>
-                  <div class="col-sm-6">
-                    <input type="text" class="form-control form-control-user" id="LastName" name="Surname"
-                      placeholder="Soyad">
-                  </div>
-                </div>
-                <div class="form-group">
-                  <input type="text" class="form-control form-control-user" id="InputUsername" name="Username"
-                    placeholder="Kullanıcı Adı">
-                </div>
-                <div class="form-group">
-                  <input type="email" class="form-control form-control-user" id="InputEmail" name="Email"
-                    placeholder="Email Adresi">
-                </div>
-                <div class="alert alert-danger" id="passwdAlert" role="alert">
-                        Girilen parolalar birbiriyle eşleşmiyor!
+    <div class="container">
+        <div class="card o-hidden border-0 shadow-lg my-5">
+            <div class="card-body p-0">
+                <div class="row">
+                    <div class="col-lg-5 d-none d-lg-block bg-register-image"></div>
+                    <div class="col-lg-7">
+                        <div class="d-flex justify-content-center">
+                        </div>
+                        <div class="p-5">
+                            <div class="text-center">
+                                <h1 class="h4 text-gray-900 mb-4">Task Core Dünyasına Hoşgeldiniz!</h1>
+                            </div>
+                            <form class="user" id="registerform" action="/Account/Register" autocomplete="off" method="POST" onsubmit="return checkPassword(this)">
+                                <div class="form-group row">
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                        <input type="text" class="form-control form-control-user" id="FirstName" name="Name"
+                                               placeholder="Ad" required>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input type="text" class="form-control form-control-user" id="LastName" name="Surname"
+                                               placeholder="Soyad" required>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" class="form-control form-control-user" id="InputUsername" name="Username"
+                                           placeholder="Kullanıcı Adı" required>
+                                </div>
+                                <div class="form-group">
+                                    <input type="email" class="form-control form-control-user" id="InputEmail" name="Email"
+                                           placeholder="Email Adresi" required>
+                                </div>
+                                <div class="alert alert-danger" id="passwdAlert" role="alert">
+                                    Girilen parolalar birbiriyle eşleşmiyor!
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                        <input type="password" minlength="6" class="form-control form-control-user" id="InputPassword" name="Password"
+                                               placeholder="Parola" required>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input type="password" class="form-control form-control-user" id="RepeatPassword"
+                                               placeholder="Parola Tekrar" required>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-user btn-block">
+                                    Kayıt Ol
+                                </button>
+                            </form>
+                            <hr>
+                            <div class="text-center">
+                                <a class="small" href="/Account/ForgotPassword">Şifrenizi Mi Unuttunuz?</a>
+                            </div>
+                            <div class="text-center">
+                                <a class="small" href="/Account/Index">Zaten bir hesabınız var mı? Giriş Yap!</a>
+                            </div>
+                        </div>
                     </div>
-                <div class="form-group row">
-                  <div class="col-sm-6 mb-3 mb-sm-0">
-                    <input type="password" class="form-control form-control-user" id="InputPassword" name="Password"
-                      placeholder="Parola">
-                  </div>
-                  <div class="col-sm-6">
-                    <input type="password" class="form-control form-control-user" id="RepeatPassword"
-                      placeholder="Parola Tekrar">
-                  </div>
                 </div>
-                <button type="submit" class="btn btn-primary btn-user btn-block">
-                  Kayıt Ol
-                </button>
-              </form>
-              <hr>
-              <div class="text-center">
-                <a class="small" href="/Account/ForgotPassword">Şifrenizi Mi Unuttunuz?</a>
-              </div>
-              <div class="text-center">
-                <a class="small" href="/Account/Index">Zaten bir hesabınız var mı? Giriş Yap!</a>
-              </div>
             </div>
-          </div>
         </div>
-      </div>
+
     </div>
 
-  </div>
+    <!-- Bootstrap core JavaScript-->
+    <script src="~/vendor/jquery/jquery.min.js"></script>
+    <script src="~/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
-  <!-- Bootstrap core JavaScript-->
-  <script src="~/vendor/jquery/jquery.min.js"></script>
-  <script src="~/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- Core plugin JavaScript-->
+    <script src="~/vendor/jquery-easing/jquery.easing.min.js"></script>
 
-  <!-- Core plugin JavaScript-->
-  <script src="~/vendor/jquery-easing/jquery.easing.min.js"></script>
+    <!-- Custom scripts for all pages-->
+    <script src="~/js/sb-admin-2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 
-  <!-- Custom scripts for all pages-->
-  <script src="~/js/sb-admin-2.min.js"></script>
-<script type="text/javascript">
-    $(()=> $('#passwdAlert').hide())
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#passwdAlert').hide();
+        });
+        $('#registerform').on('submit', (e) => {
+            e.preventDefault();
+            const body = new FormData(e.currentTarget);
+            fetch(e.currentTarget.action, {
+                method: 'post',
+                body
+            }).then(res => res.json()).then(res => {
+                Swal.fire(
+                    'Kayıt Yapıldı!',
+                    'Birazdan Anasayfaya Yönlendirileceksiniz',
+                    'success'
+                )
+                setTimeout(window.location.assign("/"), 2000);
+            });
+        })
+        function checkPassword(e) {
 
-    function checkPassword() {
-
-    var passwd = document.getElementById("InputPassword");
-    var confirm_passwd = document.getElementById("RepeatPassword");
-      if (passwd.value !== confirm_passwd.value) {
-        confirm_passwd.setCustomValidity("Girilen parolalar eşleşmiyor!");
-        $('#passwdAlert').show();
-        return false;
-      } else {
-        $('#passwdAlert').hide();
-        return true;
-      }
-    }
-  </script>
+            var passwd = document.getElementById("InputPassword");
+            var confirm_passwd = document.getElementById("RepeatPassword");
+            if (passwd.value !== confirm_passwd.value) {
+                confirm_passwd.setCustomValidity("Girilen parolalar eşleşmiyor!");
+                $('#passwdAlert').show();
+                passwd.value = null;
+                confirm_passwd.value = null;
+                return false;
+            } else {
+                $('#passwdAlert').hide();
+                return true;
+            }
+        }
+    </script>
 </body>
 </html>

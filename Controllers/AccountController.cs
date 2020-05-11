@@ -1,13 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Threading.Tasks;
 using taskcore.Dao;
 using taskcore.Manager;
 using taskcore.Models;
@@ -17,13 +14,8 @@ namespace taskcore.Controllers
     public class AccountController : Controller
     {
 
-        private DatabaseContext _context;
         private UserDao userDao = null;
-        private User user = null;
-        public AccountController()
-        {
-            
-        }
+        private string code = null;
 
         public IActionResult Index()
         {
@@ -31,7 +23,27 @@ namespace taskcore.Controllers
             {
                 return Redirect("/Project/Index");
             }
+            if (HttpContext.Session.GetInt32("error") == null)
+            {
+                HttpContext.Session.SetInt32("error", 0);
+            }
             return View();
+        }
+
+        public async Task<IActionResult> ChangePassword(string current,string pass)
+        {
+            int uid = HttpContext.Session.GetInt32("id").Value;
+            if (uid !=0 && current !=null && pass !=null)
+            {
+                var user = await GetUserDao().GetUser(uid);
+                if (current.Equals(user.Password))
+                {
+                    user.Password = pass;
+                    await GetUserDao().Modify(user);
+                }
+
+            }
+            return Redirect("Index");
         }
         public IActionResult ForgotPassword()
         {
@@ -39,16 +51,19 @@ namespace taskcore.Controllers
             {
                 return Redirect("Index");
             }
+            HttpContext.Session.SetInt32("error", 0);
             return View();
         }
 
-        public IActionResult Friends(){
-            return View(GetUserDao().FriendList());
+        public IActionResult Friends()
+        {
+            return View(GetUserDao().FriendList((int)HttpContext.Session.GetInt32("id")));
         }
-        public IActionResult FriendsList(){
-            return Json(GetUserDao().FriendList());
+        public IActionResult FriendsList()
+        {
+            return Json(GetUserDao().FriendList((int)HttpContext.Session.GetInt32("id")));
         }
-        
+
         [HttpPost]
         public async Task<IActionResult> Login(User model)
         {
@@ -59,50 +74,59 @@ namespace taskcore.Controllers
                 HttpContext.Session.SetString("name", user.Name);
                 HttpContext.Session.SetString("surname", user.Surname);
                 HttpContext.Session.SetString("username", user.Username);
-                UserManager.SetCurrentUser(user);
+                HttpContext.Session.SetInt32("error", 0);
                 return Redirect("/Project/Index");
             }
-
+            HttpContext.Session.SetInt32("error", 1);
             return RedirectToAction(nameof(Index));
         }
         public IActionResult LogOut()
         {
             HttpContext.Session.Clear();
-            UserManager.ClearUser();
             return Redirect("Index");
         }
         public IActionResult None()
         {
+            HttpContext.Session.SetInt32("error", 0);
             return View();
         }
 
-        public IActionResult Profile()
+        public async Task<IActionResult> Profile()
         {
-            if (!HttpContext.Session.GetInt32("id").HasValue)
+            int? id = HttpContext.Session.GetInt32("id");
+            if (!id.HasValue)
             {
                 return Redirect("Index");
             }
 
-            return View(GetUser());
+            return View(await GetUserDao().GetUser(id.Value));
         }
+        [HttpPost]
         public async Task<IActionResult> Register(User user)
         {
             await GetUserDao().Create(user);
             await MailManager.WelcomeMessage(user);
-            return RedirectToAction(nameof(Index));
+            return Json(true);
+        }
+
+        public async Task<IActionResult> Remove(int Id)
+        {
+            int? uid = HttpContext.Session.GetInt32("id");
+            await GetUserDao().RemoveFriend(uid.Value, Id);
+            return Redirect("Friends");
         }
         public IActionResult ResetPassword()
         {
             return View();
         }
-        public async Task<IActionResult> SendACode(string email)
+       public async Task<IActionResult> SendACode(string email)
         {
-            User tmp = await _context.User.FirstOrDefaultAsync(w => w.Email == email);
+            User tmp = await GetUserDao().Find(email);
 
             if (tmp != null)
             {
-                UserManager.SetCurrentUser(tmp);
-                await MailManager.ResetPasswordCode();
+                await MailManager.ResetPasswordCode(email,getCode());
+                await GetUserDao().InserCode(new PasswordCode{UserId=tmp.Id,Code=getCode() });
             }
             else
             {
@@ -130,8 +154,12 @@ namespace taskcore.Controllers
 
         public async Task<IActionResult> Statistics()
         {
-            int id = (int)HttpContext.Session.GetInt32("id");
-            List<ProjectsProgress> res = await ProjectDao.getInstance().ProgressList(id);
+            int? id = HttpContext.Session.GetInt32("id");
+            if (!id.HasValue)
+            {
+                return Redirect("None");
+            }
+            List<ProjectsProgress> res = await ProjectDao.getInstance().ProgressList((int)id);
             return View(res);
         }
 
@@ -146,34 +174,40 @@ namespace taskcore.Controllers
 
         public async Task<IActionResult> UpdatePassword(string Code, string Password)
         {
-            if (MailManager.getCode() == Code)
+            PasswordCode psd = await GetUserDao().getPasswordCode(Code);
+            if (psd != null)
             {
-                User tmp = UserManager.GetCurrentUser();
-                tmp.Password = Password;
-                _context.Update(tmp);
-                await _context.SaveChangesAsync();
-                MailManager.cleanCode();
+                User user = await GetUserDao().GetUser(psd.UserId);
+                user.Password = Password;
+                await GetUserDao().Modify(user);
+                await GetUserDao().RemoveCode(psd);
             }
 
             return RedirectToAction(nameof(Index));
         }
+        
 
+            public  string getCode()
+        {
+            if (code == null)
+            {
+                Random random = new Random();
+                code = "";
+                for (int i = 0; i < 6; i++)
+                {
+                    char tmp = Convert.ToChar(random.Next(48, 58));
+                    code += tmp;
+                }
+            }
 
-
+            return code;
+        }
 
         public UserDao GetUserDao()
         {
             return userDao == null ? userDao = UserDao.getInstance() : userDao;
         }
-        public User GetUser()
-        {
-            return user == null ? user = UserManager.GetCurrentUser() : user;
-        }
-
-        public DatabaseContext GetContext()
-        {
-            return _context == null ? _context = DatabaseContext.getContext() : _context;
-        }
+          
 
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

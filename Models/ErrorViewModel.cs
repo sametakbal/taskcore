@@ -1,5 +1,3 @@
-using System;
-
 namespace taskcore.Models
 {
     public class ErrorViewModel

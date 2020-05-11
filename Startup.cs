@@ -1,14 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
 using taskcore.Dao;
 
 namespace taskcore
@@ -26,9 +21,14 @@ namespace taskcore
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-            services.AddSession();
+            services.AddDistributedMemoryCache();
+            services.AddSession(options  =>
+            {
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
             services.AddDbContext<DatabaseContext>();
-            
+
             IMvcBuilder builder = services.AddRazorPages();
 #if DEBUG
             builder.AddRazorRuntimeCompilation();
