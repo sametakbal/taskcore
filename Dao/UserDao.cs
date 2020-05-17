@@ -9,7 +9,7 @@ using taskcore.Models;
 
 namespace taskcore.Dao
 {
-    public class UserDao : Dao, IDao<User>
+    public class UserDao : DaOperations, IDao<User>
     {
 
         public static UserDao instance = null;
@@ -46,9 +46,12 @@ namespace taskcore.Dao
             return instance == null ? instance = new UserDao() : instance;
         }
 
-        public Task<bool> Insert(object obj)
+        public async Task<bool> Insert(object obj)
         {
-            throw new NotImplementedException();
+            User user = (User)obj;
+            await getContext().AddAsync(user);
+            await getContext().SaveChangesAsync();
+            return true;
         }
 
         public Task<List<User>> Read(int id)
@@ -111,6 +114,11 @@ namespace taskcore.Dao
             getContext().Remove(psd);
             await getContext().SaveChangesAsync();
             return true;
+        }
+
+        public DatabaseContext GetContext()
+        {
+            throw new NotImplementedException();
         }
     }
 }

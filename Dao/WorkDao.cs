@@ -7,7 +7,7 @@ using taskcore.Models;
 
 namespace taskcore.Dao
 {
-    public class WorkDao : Dao, IDao<Work>
+    public class WorkDao : DaOperations, IDao<Work>
     {
         private static WorkDao instance = null;
 
@@ -124,6 +124,11 @@ namespace taskcore.Dao
 
 
         public Task<List<Work>> Read(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public DatabaseContext GetContext()
         {
             throw new NotImplementedException();
         }

@@ -11,7 +11,7 @@ namespace taskcore.Controllers
     [UserFilter]
     public class ProjectController : Controller
     {
-        private ProjectDao instance = null;
+        private DaOperations instance = null;
 
 
         public IActionResult Index()
@@ -23,7 +23,7 @@ namespace taskcore.Controllers
         public async Task<IActionResult> AcceptRequest(int Id)
         {
             int? uid = HttpContext.Session.GetInt32("id");
-            await getInstance().Accept(Id, uid.Value);
+            await getInstance().ProjectAccept(Id, uid.Value);
             return Json(true);
         }
 
@@ -31,20 +31,20 @@ namespace taskcore.Controllers
         {
             int? uid = HttpContext.Session.GetInt32("id");
 
-            await getInstance().Decline(Id,uid.Value);
+            await getInstance().ProjectDecline(Id,uid.Value);
             return Json(true);
         }
 
         public async Task<IActionResult> UpdateStatus(int itemid, int statusid)
         {
-            await getInstance().ModifyStatus(itemid, statusid);
+            await getInstance().ProjectModifyStatus(itemid, statusid);
             return Json(true);
         }
         [HttpGet]
-        public async Task<IActionResult> ReadToAll()
+        public IActionResult ReadToAll()
         {
             int? userId = HttpContext.Session.GetInt32("id");
-            List<Project> result = await getInstance().Read((int)userId);
+            List<Project> result = getInstance().ProjectRead((userId.Value));
             return Json(result);
         }
         [HttpPost]
@@ -52,52 +52,49 @@ namespace taskcore.Controllers
         {
             int? userId = HttpContext.Session.GetInt32("id");
 
-            await getInstance().Insert(project);
-            await getInstance().AddUserProject(new UserProjects
+            await getInstance().ProjectInsert(project, new UserProjects
             {
-                ProjectId = project.Id,
                 UserId = userId.Value,
                 IsAccept = true
             });
-
 
             return Json(true);
         }
         public async Task<IActionResult> Delete(int id)
         {
-            await getInstance().Erase(id);
+            await getInstance().ProjectErase(id);
             return Json(true);
         }
         [HttpPost]
         public async Task<IActionResult> Update(Project project)
         {
-            await getInstance().Modify(project);
+            await getInstance().ProjectModify(project);
             return Json(true);
         }
         public async Task<IActionResult> ProjectDetails(int id)
         {
-            var project = await getInstance().Detail(id);
+            var project = await getInstance().ProjectDetail(id);
             return Json(project);
         }
         [HttpPost]
         public async Task<IActionResult> ProjectRequest(int id, int projectId)
         {
-            await getInstance().Request(id, projectId);
+            await getInstance().ProjectRequest(id, projectId);
             return Json(true);
         }
 
-        public async Task<IActionResult> ProjectRequestList()
+        public async Task<IActionResult> RequestList()
         {
             int? uid = HttpContext.Session.GetInt32("id");
 
-            return Json(await getInstance().RequestList(uid.Value));
+            return Json(await getInstance().ProjectRequestList(uid.Value));
         }
 
-        public ProjectDao getInstance()
+        public DaOperations getInstance()
         {
             if (instance == null)
             {
-                instance = ProjectDao.getInstance();
+                instance = DaOperations.GetInstance();
             }
             return instance;
         }

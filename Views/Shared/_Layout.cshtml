@@ -271,7 +271,7 @@
                 $('#reqcount').hide();
                 $('#reqnothing').hide();
 
-      fetch('/Project/ProjectRequestList')
+      fetch('/Project/RequestList')
       .then(res => res.json())
       .then(list =>{
         if (list.length !== 0){

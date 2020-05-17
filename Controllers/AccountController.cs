@@ -15,6 +15,7 @@ namespace taskcore.Controllers
     {
 
         private UserDao userDao = null;
+        private DaOperations dao = null;
         private string code = null;
 
         public IActionResult Index()
@@ -35,11 +36,11 @@ namespace taskcore.Controllers
             int uid = HttpContext.Session.GetInt32("id").Value;
             if (uid !=0 && current !=null && pass !=null)
             {
-                var user = await GetUserDao().GetUser(uid);
+                var user = await getDao().GetUser(uid);
                 if (current.Equals(user.Password))
                 {
                     user.Password = pass;
-                    await GetUserDao().Modify(user);
+                    await getDao().Modify(user);
                 }
 
             }
@@ -57,17 +58,17 @@ namespace taskcore.Controllers
 
         public IActionResult Friends()
         {
-            return View(GetUserDao().FriendList((int)HttpContext.Session.GetInt32("id")));
+            return View(getDao().FriendList((int)HttpContext.Session.GetInt32("id")));
         }
         public IActionResult FriendsList()
         {
-            return Json(GetUserDao().FriendList((int)HttpContext.Session.GetInt32("id")));
+            return Json(getDao().FriendList((int)HttpContext.Session.GetInt32("id")));
         }
 
         [HttpPost]
         public async Task<IActionResult> Login(User model)
         {
-            User user = await GetUserDao().Find(model);
+            User user = await getDao().Find(model);
             if (user != null)
             {
                 HttpContext.Session.SetInt32("id", user.Id);
@@ -99,12 +100,12 @@ namespace taskcore.Controllers
                 return Redirect("Index");
             }
 
-            return View(await GetUserDao().GetUser(id.Value));
+            return View(await getDao().GetUser(id.Value));
         }
         [HttpPost]
         public async Task<IActionResult> Register(User user)
         {
-            await GetUserDao().Create(user);
+            await getDao().Create(user);
             await MailManager.WelcomeMessage(user);
             return Json(true);
         }
@@ -112,7 +113,7 @@ namespace taskcore.Controllers
         public async Task<IActionResult> Remove(int Id)
         {
             int? uid = HttpContext.Session.GetInt32("id");
-            await GetUserDao().RemoveFriend(uid.Value, Id);
+            await getDao().RemoveFriend(uid.Value, Id);
             return Redirect("Friends");
         }
         public IActionResult ResetPassword()
@@ -121,12 +122,12 @@ namespace taskcore.Controllers
         }
        public async Task<IActionResult> SendACode(string email)
         {
-            User tmp = await GetUserDao().Find(email);
+            User tmp = await getDao().Find(email);
 
             if (tmp != null)
             {
                 await MailManager.ResetPasswordCode(email,getCode());
-                await GetUserDao().InserCode(new PasswordCode{UserId=tmp.Id,Code=getCode() });
+                await getDao().InserCode(new PasswordCode{UserId=tmp.Id,Code=getCode() });
             }
             else
             {
@@ -168,19 +169,19 @@ namespace taskcore.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateProfile(User usr)
         {
-            await GetUserDao().Modify(usr);
+            await getDao().Modify(usr);
             return Json(true);
         }
 
         public async Task<IActionResult> UpdatePassword(string Code, string Password)
         {
-            PasswordCode psd = await GetUserDao().getPasswordCode(Code);
+            PasswordCode psd = await getDao().getPasswordCode(Code);
             if (psd != null)
             {
-                User user = await GetUserDao().GetUser(psd.UserId);
+                User user = await getDao().GetUser(psd.UserId);
                 user.Password = Password;
-                await GetUserDao().Modify(user);
-                await GetUserDao().RemoveCode(psd);
+                await getDao().Modify(user);
+                await getDao().RemoveCode(psd);
             }
 
             return RedirectToAction(nameof(Index));
@@ -203,11 +204,15 @@ namespace taskcore.Controllers
             return code;
         }
 
-        public UserDao GetUserDao()
+  /*      public UserDao getDao()
         {
             return userDao == null ? userDao = UserDao.getInstance() : userDao;
+        }*/
+        
+        public UserDao getDao()
+        {
+            return  DaOperations.GetUserDao();
         }
-          
 
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
