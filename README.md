@@ -9,3 +9,9 @@
 
 ![](images/homepage.PNG)
 ![](images/porjectadd.gif)
+![](images/switch.gif)
+
+- Projeler alt görevlerden oluşur. Projeye tıklayıp altında onu oluşturan projeler  aynı şekilde 4 ana başlık altında listelenir.
+![](images/taskadd.gif)
+
+
