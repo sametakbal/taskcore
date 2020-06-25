@@ -8,4 +8,4 @@
 - Projeler Yapılacaklar, Yapılıyor, Testte ve Bitti olarak 4 ana başlık altında listelenir.
 
 ![](images/homepage.PNG)
-![](images/porjectadd.GIF)
+![](images/porjectadd.gif)
