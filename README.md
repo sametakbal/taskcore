@@ -19,4 +19,19 @@
 
 ![](images/progress.gif)
 
+- İstatistikler sekmesinden projelerin durumları ve bulunan hafta içerisinde kaç görev bitirildiği görüntülenebilir.
+
+![](images/statistics.gif)
+
+- Sistemde kayıtlı kullanıcılara ekip arkadaşı isteği gönderebilir.
+
+![](images/addfriend.gif)
+
+![](images/acceptreq.gif)
+
+- Ekip arkadaşlarını projeye ekleyebilir ve eklenen arkadaşlar proje altındaki görevleri görüntüleyebilir ve yönetebilir.
+
+![](images/friendproject.gif)
+
+
 
