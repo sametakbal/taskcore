@@ -106,7 +106,6 @@ namespace taskcore.Controllers
         public async Task<IActionResult> Register(User user)
         {
             await getDao().Create(user);
-            await MailManager.WelcomeMessage(user);
             return Json(true);
         }
 

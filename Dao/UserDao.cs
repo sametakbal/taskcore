@@ -6,6 +6,7 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using taskcore.Manager;
 using taskcore.Models;
+using taskcore.Observer;
 
 namespace taskcore.Dao
 {
@@ -14,11 +15,13 @@ namespace taskcore.Dao
 
         public static UserDao instance = null;
         public User user = null;
+        public UserObserver observer = null;
         public async Task<bool> Create(object obj)
         {
             User user = (User)obj;
             await getContext().AddAsync(user);
             await getContext().SaveChangesAsync();
+            getObserver().Create(user);
             return true;
         }
 
@@ -65,6 +68,7 @@ namespace taskcore.Dao
             var user = getContext().User.First(w => w.Id == tmp.Id);
             getContext().Entry(user).CurrentValues.SetValues(tmp);
             await getContext().SaveChangesAsync();
+            getObserver().Update(tmp);
             return true;
         }
 
@@ -89,7 +93,7 @@ namespace taskcore.Dao
 
         public async Task<User> GetUser(int id)
         {
-            return user == null ? user = await getContext().User.FindAsync(id): user;
+            return await getContext().User.FindAsync(id);
         }
 
         public async Task<User> Find(string email)
@@ -118,7 +122,16 @@ namespace taskcore.Dao
 
         public DatabaseContext GetContext()
         {
-            throw new NotImplementedException();
+            return DatabaseContext.getContext();
+        }
+
+        public UserObserver getObserver()
+        {
+            if(observer == null)
+            {
+                observer = new UserObserver();
+            }
+            return observer;
         }
     }
 }

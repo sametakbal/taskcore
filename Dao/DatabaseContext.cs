@@ -46,7 +46,6 @@ namespace taskcore.Dao
         {
             if (!optionsBuilder.IsConfigured)
             {
-                //optionsBuilder.UseSqlServer("Server=34.65.150.41;Initial Catalog=taskcoredb;User ID=sqlserver;Password=Taskcoredb2811?;");
                 optionsBuilder.UseSqlServer("Server=localhost;Database=taskcoredb;Trusted_Connection=True;");
             }
         }
