@@ -15,4 +15,8 @@
 
 ![](images/taskadd.gif)
 
+- Biten projelerin oranına göre ilerleme çubuğunda projenin durumu görüntülenebilir.
+
+![](images/progress.gif)
+
 
